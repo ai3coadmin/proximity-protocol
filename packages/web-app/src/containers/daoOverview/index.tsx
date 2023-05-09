@@ -10,6 +10,8 @@ import {ActiveIndicator, Indicator, StyledCarousel} from 'containers/carousel';
 import useScreen from 'hooks/useScreen';
 import {trackEvent} from 'services/analytics';
 import {i18n} from '../../../i18n.config';
+import {CreateDAO} from '../../utils/paths';
+import {useAuth0} from '@auth0/auth0-react';
 
 type OverviewDAOHeaderProps = {
   navLabel: string;
@@ -24,8 +26,12 @@ export const OverviewDAOHeader: React.FC<OverviewDAOHeaderProps> = ({
 }) => {
   const {t} = useTranslation();
   const {next} = useFormStep();
+  const {loginWithRedirect, isAuthenticated} = useAuth0();
 
   const handleSetupClick = () => {
+    if (!isAuthenticated) {
+      return loginWithRedirect();
+    }
     trackEvent('daoCreation_setupDAO_clicked');
     next();
   };
@@ -63,7 +69,7 @@ export const OverviewDAOHeader: React.FC<OverviewDAOHeaderProps> = ({
             size="large"
             className="w-full tablet:w-max whitespace-nowrap"
             iconRight={<IconChevronRight />}
-            label={t('createDAO.overview.button')}
+            label={!isAuthenticated ? 'Login' : t('createDAO.overview.button')}
             onClick={handleSetupClick}
           />
         </div>

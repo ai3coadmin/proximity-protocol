@@ -23,6 +23,7 @@ import {UseCacheProvider} from 'hooks/useCache';
 import {UseClientProvider} from 'hooks/useClient';
 import {infuraApiKey} from 'utils/constants';
 import App from './app';
+import {Auth0Provider} from '@auth0/auth0-react';
 
 const providerOptions: IProviderOptions = {
   walletconnect: {
@@ -76,9 +77,19 @@ ReactDOM.render(
                               {/* By default, goerli client is chosen, each useQuery needs to pass the network client it needs as argument
                       For REST queries using apollo, there's no need to pass a different client to useQuery  */}
                               <ApolloProvider
-                                client={client['goerli'] || mumbaiClient} //TODO remove fallback when all clients are defined
+                                client={client['mumbai'] || mumbaiClient} //TODO remove fallback when all clients are defined
                               >
-                                <App />
+                                <Auth0Provider
+                                  domain="dev-pydmztrrjhsxf7fv.us.auth0.com"
+                                  clientId={
+                                    import.meta.env.VITE_AUTH0_CLIENT_ID
+                                  }
+                                  authorizationParams={{
+                                    redirect_uri: window.location.origin,
+                                  }}
+                                >
+                                  <App />
+                                </Auth0Provider>
                                 <ReactQueryDevtools initialIsOpen={false} />
                               </ApolloProvider>
                             </GlobalModalsProvider>
