@@ -101,32 +101,32 @@ if (value && JSON.parse(value).functional) {
   restoreApolloCache();
 }
 
-export const goerliClient = new ApolloClient({
-  cache,
-  link: restLink.concat(new HttpLink({uri: SUBGRAPH_API_URL['goerli']})),
-});
+// export const goerliClient = new ApolloClient({
+//   cache,
+//   link: restLink.concat(new HttpLink({uri: SUBGRAPH_API_URL['goerli']})),
+// });
 
-const mumbaiClient = new ApolloClient({
+export const mumbaiClient = new ApolloClient({
   cache,
   link: restLink.concat(new HttpLink({uri: SUBGRAPH_API_URL['mumbai']})),
 });
 
-const arbitrumTestClient = new ApolloClient({
-  cache,
-  link: restLink.concat(new HttpLink({uri: SUBGRAPH_API_URL['arbitrum-test']})),
-});
+// const arbitrumTestClient = new ApolloClient({
+//   cache,
+//   link: restLink.concat(new HttpLink({uri: SUBGRAPH_API_URL['arbitrum-test']})),
+// });
 
 // TODO: remove undefined when all clients are defined
 const client: Record<
   SupportedNetworks,
   ApolloClient<NormalizedCacheObject> | undefined
 > = {
-  ethereum: undefined,
-  goerli: goerliClient,
+  // ethereum: undefined,
+  // goerli: goerliClient,
   polygon: undefined,
   mumbai: mumbaiClient,
-  arbitrum: undefined,
-  'arbitrum-test': arbitrumTestClient,
+  // arbitrum: undefined,
+  // 'arbitrum-test': arbitrumTestClient,
   unsupported: undefined,
 };
 
@@ -156,7 +156,7 @@ const selectedDaoVar = makeVar<NavigationDao>({
     name: '',
     avatar: '',
   },
-  chain: 5,
+  chain: 80001,
   plugins: [],
 });
 

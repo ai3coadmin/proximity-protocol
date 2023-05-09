@@ -508,10 +508,10 @@ export const translateToAppNetwork = (
   }
 
   switch (sdkNetwork) {
-    case 'mainnet':
-      return 'ethereum';
-    case 'goerli':
-      return 'goerli';
+    // case 'mainnet':
+    //   return 'ethereum';
+    // case 'goerli':
+    //   return 'goerli';
     case 'maticmum':
       return 'mumbai';
     case 'matic':
@@ -537,10 +537,10 @@ export function translateToNetworkishName(
       return 'matic';
     case 'mumbai':
       return 'maticmum';
-    case 'ethereum':
-      return 'mainnet';
-    case 'goerli':
-      return 'goerli';
+    // case 'ethereum':
+    //   return 'mainnet';
+    // case 'goerli':
+    //   return 'goerli';
   }
 
   return 'unsupported';

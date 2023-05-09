@@ -72,7 +72,7 @@ export const UseClientProvider: React.FC = ({children}) => {
         },
       },
     ];
-    if (network !== 'ethereum') {
+    if (network !== 'polygon') {
       ipfsNodes = [
         {
           url: IPFS_ENDPOINT_TEST,

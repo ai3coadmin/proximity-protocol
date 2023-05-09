@@ -7,13 +7,14 @@ import styled from 'styled-components';
 import CreateNewToken from './createNewToken';
 import {MultisigWallets} from 'components/multisigWallets';
 import {MultisigEligibility} from 'components/multisigEligibility';
+import AddExistingToken from './addExistingToken';
 
 const SetupCommunityForm: React.FC = () => {
   const {t} = useTranslation();
 
   const {control, resetField, setValue} = useFormContext();
-  const membership = useWatch({
-    name: 'membership',
+  const [membership, isCustomToken] = useWatch({
+    name: ['membership', 'isCustomToken'],
   });
 
   useEffect(() => {
@@ -56,16 +57,16 @@ const SetupCommunityForm: React.FC = () => {
                 {...(value === 'token' ? {type: 'active'} : {})}
               />
 
-              <CheckboxListItem
-                label={t('createDAO.step3.multisigMembership')}
-                helptext={t('createDAO.step3.multisigMembershipSubtitle')}
-                onClick={() => {
-                  resetTokenFields();
-                  onChange('multisig');
-                }}
-                multiSelect={false}
-                {...(value === 'multisig' ? {type: 'active'} : {})}
-              />
+              {/*<CheckboxListItem*/}
+              {/*  label={t('createDAO.step3.multisigMembership')}*/}
+              {/*  helptext={t('createDAO.step3.multisigMembershipSubtitle')}*/}
+              {/*  onClick={() => {*/}
+              {/*    resetTokenFields();*/}
+              {/*    onChange('multisig');*/}
+              {/*  }}*/}
+              {/*  multiSelect={false}*/}
+              {/*  {...(value === 'multisig' ? {type: 'active'} : {})}*/}
+              {/*/>*/}
 
               {/* Address List Dao has been disabled */}
               {/* <CheckboxListItem
@@ -142,7 +143,8 @@ const SetupCommunityForm: React.FC = () => {
         </FormItem>
       )}*/}
 
-      {membership === 'token' && <CreateNewToken />}
+      {/*{membership === 'token' && !isCustomToken && <CreateNewToken />}*/}
+      {membership === 'token' && <AddExistingToken />}
 
       {/* Add existing token */}
       {/*{isNewToken === false && membership === 'token' && (

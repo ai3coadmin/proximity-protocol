@@ -33,10 +33,10 @@ export const usePollGasFee = (
       try {
         const results = await Promise.all([
           estimationFunction(),
-          fetchTokenPrice(constants.AddressZero, network),
+          // fetchTokenPrice(constants.AddressZero, network),
         ]);
 
-        setTokenPrice(results[1] || 0);
+        setTokenPrice(0);
         setMaxFee(results[0]?.max);
         setAverageFee(results[0]?.average);
         setError(undefined);

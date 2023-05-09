@@ -10,6 +10,8 @@ import {InfiniteData, useInfiniteQuery} from '@tanstack/react-query';
 import {CHAIN_METADATA, SupportedChainID} from 'utils/constants';
 import {resolveDaoAvatarIpfsCid} from 'utils/library';
 import {useClient} from './useClient';
+import {PluginTypes, usePluginClient} from './usePluginClient';
+import {VetoClient} from '../custom/sdk-client/veto';
 
 export const EXPLORE_FILTER = ['favorite', 'newest', 'popular'] as const;
 export type ExploreFilter = typeof EXPLORE_FILTER[number];
@@ -31,9 +33,15 @@ const DEFAULT_QUERY_PARAMS = {
  * @param options query parameters for fetching the DAOs
  * @returns list of DAOs based on given params
  */
-async function fetchDaos(client: Client | undefined, options: IDaoQueryParams) {
+async function fetchDaos(
+  client: VetoClient | undefined,
+  options: IDaoQueryParams
+) {
   return client
-    ? client.methods.getDaos(options)
+    ? client.methods.getDaos({
+        ...options,
+        address: import.meta.env.VITE_VETO_PLUGIN_ADDRESS,
+      })
     : Promise.reject(new Error('Client not defined'));
 }
 
@@ -57,6 +65,7 @@ export const useDaosInfiniteQuery = (
   }: Partial<Pick<IDaoQueryParams, 'direction' | 'limit' | 'sortBy'>> = {}
 ) => {
   const {client, network: clientNetwork} = useClient();
+  const pluginClient = usePluginClient('token-voting.plugin.dao.eth');
 
   return useInfiniteQuery({
     // notice the use of `clientNetwork` instead of `network` from network context
@@ -67,7 +76,7 @@ export const useDaosInfiniteQuery = (
 
     queryFn: ({pageParam = 0}) => {
       const skip = limit * pageParam;
-      return fetchDaos(client, {skip, limit, direction, sortBy});
+      return fetchDaos(pluginClient, {skip, limit, direction, sortBy});
     },
 
     // calculate next page value

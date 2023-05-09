@@ -26,7 +26,7 @@ type NetworkContext = {
 };
 
 const NetworkContext = createContext<NetworkContext>({
-  network: 'ethereum',
+  network: 'polygon',
   setNetwork: () => {},
   isL2Network: false,
   networkUrlSegment: undefined,
@@ -64,7 +64,7 @@ const determineNetwork = (
   }
 
   //NETWORK defaults to eth
-  return 'ethereum';
+  return 'polygon';
 };
 
 /**

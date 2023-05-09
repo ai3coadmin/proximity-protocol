@@ -65,6 +65,7 @@ import {useNetwork} from './network';
 import {usePrivacyContext} from './privacyContext';
 import {useProviders} from './providers';
 import {isAddress} from 'ethers/lib/utils';
+import {VetoClient} from '../custom/sdk-client/veto';
 
 type Props = {
   showTxModal: boolean;
@@ -164,7 +165,7 @@ const CreateProposalProvider: React.FC<Props> = ({
           action.inputs.mintTokensToWallets.forEach(mint => {
             actions.push(
               Promise.resolve(
-                (pluginClient as TokenVotingClient).encoding.mintTokenAction(
+                (pluginClient as VetoClient).encoding.mintTokenAction(
                   action.summary.daoTokenAddress as string,
                   {
                     address: mint.address,

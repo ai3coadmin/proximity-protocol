@@ -16,6 +16,7 @@ import {getTokenInfo} from 'utils/tokens';
 import {validateTokenAddress} from 'utils/validators';
 import {useNetwork} from 'context/network';
 import {CHAIN_METADATA, getSupportedNetworkByChainId} from 'utils/constants';
+import {SelectEligibility} from '../../components/selectEligibility';
 
 const DEFAULT_BLOCK_EXPLORER = 'https://etherscan.io/';
 
@@ -35,10 +36,11 @@ const AddExistingToken: React.FC = () => {
     });
 
   const provider = useSpecificProvider(blockchain.id);
+  console.log('provider', provider);
   const explorer = useMemo(() => {
     if (blockchain.id) {
       const defaultNetwork =
-        getSupportedNetworkByChainId(blockchain.id) || 'ethereum';
+        getSupportedNetworkByChainId(blockchain.id) || 'polygon';
       const explorerUrl = CHAIN_METADATA[defaultNetwork].explorer;
       return explorerUrl || DEFAULT_BLOCK_EXPLORER;
     }
@@ -89,13 +91,6 @@ const AddExistingToken: React.FC = () => {
 
   return (
     <>
-      <DescriptionContainer>
-        <Title>{t('labels.addExistingToken')}</Title>
-        <Subtitle>
-          {t('createDAO.step3.addExistingTokenHelptext')}
-          <Link label={t('createDAO.step3.tokenHelptextLink')} href="" />.
-        </Subtitle>
-      </DescriptionContainer>
       <FormItem>
         <DescriptionContainer>
           <Label label={t('labels.address')} />
@@ -154,6 +149,15 @@ const AddExistingToken: React.FC = () => {
             </InfoContainer>
           </TokenInfoContainer>
         )}
+      </FormItem>
+      <FormItem>
+        <DescriptionContainer>
+          <Label
+            label={t('labels.proposalCreation')}
+            helpText={t('createDAO.step3.proposalCreationHelpertext')}
+          />
+        </DescriptionContainer>
+        <SelectEligibility />
       </FormItem>
     </>
   );

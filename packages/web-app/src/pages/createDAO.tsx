@@ -70,7 +70,7 @@ const defaultValues = {
   membership: 'token',
   eligibilityType: 'token' as CreateDaoFormData['eligibilityType'],
   eligibilityTokenAmount: 1,
-  isCustomToken: true,
+  isCustomToken: false,
   durationDays: '1',
   durationHours: '0',
   durationMinutes: '0',
@@ -114,7 +114,7 @@ const CreateDAO: React.FC = () => {
     // get the default expected network using the connected wallet, use ethereum
     // mainnet in case user accesses the flow without wallet connection. Ideally,
     // this should not happen
-    const defaultNetwork = getSupportedNetworkByChainId(chainId) || 'ethereum';
+    const defaultNetwork = getSupportedNetworkByChainId(chainId) || 'polygon';
 
     // update the network context
     setNetwork(defaultNetwork);

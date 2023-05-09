@@ -26,7 +26,7 @@ const WalletAugmented: React.FC<unknown> = ({children}) => {
     // web3modal entirely, we'll no longer need to rely on the chains defined in
     // useWallet. Instead we'll be rely entirely on the data defined in
     // constants/chains.tsx
-    if (wallet.networkName === 'main') return network === 'ethereum';
+    if (wallet.networkName === 'main') return network === 'polygon';
     else return network === wallet.networkName;
   }, [wallet, network]);
 

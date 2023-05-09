@@ -6,22 +6,26 @@ import {
 import {useEffect, useState} from 'react';
 
 import {useClient} from './useClient';
+import {VetoClient} from '../custom/sdk-client/veto';
 
 export type PluginTypes =
+  | 'veto.plugin.dao.eth'
   | 'token-voting.plugin.dao.eth'
   | 'multisig.plugin.dao.eth';
 
 type PluginType<T> = T extends 'token-voting.plugin.dao.eth'
-  ? TokenVotingClient
+  ? VetoClient
   : T extends 'multisig.plugin.dao.eth'
   ? MultisigClient
+  : T extends 'veto.plugin.dao.eth'
+  ? VetoClient
   : never;
 
 export function isTokenVotingClient(
-  client: TokenVotingClient | MultisigClient
+  client: TokenVotingClient | MultisigClient | VetoClient
 ): client is TokenVotingClient {
   if (!client || Object.keys(client).length === 0) return false;
-  return client instanceof TokenVotingClient;
+  return client instanceof VetoClient;
 }
 
 export function isMultisigClient(
@@ -58,9 +62,7 @@ export const usePluginClient = <T extends PluginTypes = PluginTypes>(
           );
           break;
         case 'token-voting.plugin.dao.eth':
-          setPluginClient(
-            new TokenVotingClient(ContextPlugin.fromContext(context))
-          );
+          setPluginClient(new VetoClient(ContextPlugin.fromContext(context)));
           break;
         default:
           throw new Error('The requested plugin type is invalid');

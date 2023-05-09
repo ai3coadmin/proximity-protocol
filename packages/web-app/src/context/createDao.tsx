@@ -36,6 +36,7 @@ import {readFile, translateToNetworkishName} from 'utils/library';
 import {Dashboard} from 'utils/paths';
 import {useGlobalModalContext} from './globalModals';
 import {useNetwork} from './network';
+import {VetoClient} from '../custom/sdk-client/veto';
 
 type CreateDaoContextType = {
   /** Prepares the creation data and awaits user confirmation to start process */
@@ -211,17 +212,18 @@ const CreateDaoProvider: React.FC = ({children}) => {
   }, [getValues]);
 
   const getErc20PluginParams =
-    useCallback((): ITokenVotingPluginInstall['newToken'] => {
-      const {tokenName, tokenSymbol, wallets} = getValues();
+    useCallback((): ITokenVotingPluginInstall['useToken'] => {
+      const {tokenAddress, tokenName, tokenSymbol, wallets} = getValues();
       return {
-        name: tokenName,
-        symbol: tokenSymbol,
-        decimals: 18,
+        address: tokenAddress,
+        // name: tokenName,
+        // symbol: tokenSymbol,
+        // decimals: 18,
         // minter: '0x...', // optionally, define a minter
-        balances: wallets?.map(wallet => ({
-          address: wallet.address,
-          balance: parseUnits(wallet.amount, 18).toBigInt(),
-        })),
+        // balances: wallets?.map(wallet => ({
+        //   address: wallet.address,
+        //   balance: parseUnits(wallet.amount, 18).toBigInt(),
+        // })),
       };
     }, [getValues]);
 
@@ -242,14 +244,13 @@ const CreateDaoProvider: React.FC = ({children}) => {
       }
       case 'token': {
         const [votingSettings, network] = getVoteSettings();
-        const tokenVotingPlugin =
-          TokenVotingClient.encoding.getPluginInstallItem(
-            {
-              votingSettings: votingSettings,
-              newToken: getErc20PluginParams(),
-            },
-            network
-          );
+        const tokenVotingPlugin = VetoClient.encoding.getPluginInstallItem(
+          {
+            votingSettings: votingSettings,
+            useToken: getErc20PluginParams(),
+          },
+          network
+        );
 
         plugins.push(tokenVotingPlugin);
         break;
