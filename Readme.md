@@ -1,4 +1,4 @@
-# Aragon DAO UI
+# Aragon DAO UI 
 
 This workspace contains all packages related to the Aragon DAO app UI - the human centered approach to DAOs.
 
