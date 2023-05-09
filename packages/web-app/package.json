@@ -6,7 +6,7 @@
   "author": "Aragon Association",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --sourcemap true",
+    "build": "vite build --sourcemap true",
     "serve": "vite preview",
     "serve:docker": "vite --host --port 5000",
     "test": "jest --coverage=false",
