@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import {ButtonText} from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
+import {useAuth0} from '@auth0/auth0-react';
+import {CreateDAO} from '../../utils/paths';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -17,6 +19,7 @@ type Props = {
 
 const CTACard: React.FC<Props> = props => {
   const {isDesktop} = useScreen();
+  const {loginWithRedirect, isAuthenticated} = useAuth0();
 
   return (
     <CTACardWrapper className={props.className}>
@@ -26,15 +29,26 @@ const CTACard: React.FC<Props> = props => {
         <Subtitle>{props.subtitle}</Subtitle>
       </Content>
 
-      <ButtonText
-        size="large"
-        label={props.actionLabel}
-        {...(props.actionAvailable
-          ? {mode: 'primary'}
-          : {mode: 'ghost', disabled: true})}
-        onClick={() => props.onClick(props.path)}
-        className={`${!isDesktop && 'w-full'}`}
-      />
+      <div>
+        <ButtonText
+          size="large"
+          label={
+            props.path === CreateDAO && !isAuthenticated
+              ? 'Login'
+              : props.actionLabel
+          }
+          {...(props.actionAvailable
+            ? {mode: 'primary'}
+            : {mode: 'ghost', disabled: true})}
+          onClick={() => {
+            if (props.path === CreateDAO && !isAuthenticated) {
+              return loginWithRedirect();
+            }
+            return props.onClick(props.path);
+          }}
+          className={`${!isDesktop && 'w-full'}`}
+        />
+      </div>
     </CTACardWrapper>
   );
 };

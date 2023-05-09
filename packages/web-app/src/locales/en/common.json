@@ -810,8 +810,8 @@
   },
   "explore": {
     "hero": {
-      "title": "Explore the DAO World",
-      "subtitle1": "Build your DAO, explore communities, and find inspiration for your project all in one place."
+      "title": "Regional DAO Protocol",
+      "subtitle1": "Put your local community on turbo"
     },
     "explorer": {
       "title": "Explore DAOs",
@@ -943,7 +943,7 @@
     }
   },
   "logo": {
-    "linkURL": "https://aragon.org/"
+    "linkURL": "/"
   },
   "modal": {
     "deposit": {

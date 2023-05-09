@@ -4,7 +4,7 @@ import {ButtonWallet} from '@aragon/ui-components';
 import {useTranslation} from 'react-i18next';
 
 import {useWallet} from 'hooks/useWallet';
-import Logo from 'public/logo.svg';
+import Logo from 'public/aib-logo.png';
 import {useGlobalModalContext} from 'context/globalModals';
 import {Container, GridLayout} from 'components/layout';
 
@@ -67,7 +67,7 @@ const LeftContent = styled.div.attrs({
 })``;
 
 const LogoContainer = styled.img.attrs({
-  className: 'h-4 cursor-pointer',
+  className: 'h-8 cursor-pointer',
 })``;
 
 const RightContent = styled.div.attrs({
