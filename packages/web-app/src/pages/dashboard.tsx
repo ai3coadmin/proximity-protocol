@@ -78,6 +78,7 @@ const Dashboard: React.FC = () => {
     isLoading: liveDaoLoading,
     isSuccess,
   } = useDaoQuery(urlAddressOrEns, pollInterval);
+  console.log('liveDao', liveDao);
   const liveAddressOrEns = toDisplayEns(liveDao?.ensDomain) || liveDao?.address;
 
   // pending DAO
@@ -292,14 +293,14 @@ const Dashboard: React.FC = () => {
         {isDesktop ? (
           <DashboardContent
             daoAddressOrEns={liveAddressOrEns}
-            pluginType={liveDao.plugins[0].id as PluginTypes}
-            pluginAddress={liveDao.plugins[0].instanceAddress || ''}
+            pluginType={liveDao.plugins[0]?.id as PluginTypes}
+            pluginAddress={liveDao.plugins[0]?.instanceAddress || ''}
           />
         ) : (
           <MobileDashboardContent
             daoAddressOrEns={liveAddressOrEns}
-            pluginType={liveDao.plugins[0].id as PluginTypes}
-            pluginAddress={liveDao.plugins[0].instanceAddress || ''}
+            pluginType={liveDao.plugins[0]?.id as PluginTypes}
+            pluginAddress={liveDao.plugins[0]?.instanceAddress || ''}
           />
         )}
       </>
