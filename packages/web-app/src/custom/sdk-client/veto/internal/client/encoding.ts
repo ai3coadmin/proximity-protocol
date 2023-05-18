@@ -55,7 +55,12 @@ export class VetoClientEncoding
     if (!SupportedNetworksArray.includes(network)) {
       throw new UnsupportedNetworkError(network);
     }
+    let pluginAddress = import.meta.env.VITE_VETO_PLUGIN_ADDRESS;
+    if (network === 'maticmum') {
+      pluginAddress = import.meta.env.VITE_VETO_PLUGIN_ADDRESS_MUMBAI;
+    }
     const args = tokenVotingInitParamsToContract(params);
+    console.log('args', args);
     const hexBytes = defaultAbiCoder.encode(
       // ["votingMode","supportThreshold", "minParticipation", "minDuration"], ["address","name","symbol"][ "receivers","amount"]
       [
@@ -65,7 +70,7 @@ export class VetoClientEncoding
       args
     );
     return {
-      id: import.meta.env.VITE_VETO_PLUGIN_ADDRESS,
+      id: pluginAddress,
       data: hexToBytes(hexBytes),
     };
   }

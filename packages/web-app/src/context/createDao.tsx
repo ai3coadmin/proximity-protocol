@@ -258,7 +258,7 @@ const CreateDaoProvider: React.FC = ({children}) => {
       default:
         throw new Error(`Unknown dao type: ${membership}`);
     }
-
+    console.log('plugins', plugins);
     const metadata: DaoMetadata = {
       name: daoName,
       description: daoSummary,

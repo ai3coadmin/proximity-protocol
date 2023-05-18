@@ -38,6 +38,7 @@ import {
   isMultisigClient,
   isTokenVotingClient,
   usePluginClient,
+  isVetoVotingClient,
 } from 'hooks/usePluginClient';
 import {
   isMultisigVotingSettings,
@@ -376,7 +377,8 @@ const ProposeSettingWrapper: React.FC<Props> = ({
           }
         } else if (
           action.name === 'modify_token_voting_settings' &&
-          isTokenVotingClient(pluginClient)
+          (isTokenVotingClient(pluginClient) ||
+            isVetoVotingClient(pluginClient))
         ) {
           actions.push(
             Promise.resolve(

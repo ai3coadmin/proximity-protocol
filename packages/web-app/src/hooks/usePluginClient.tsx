@@ -14,7 +14,7 @@ export type PluginTypes =
   | 'multisig.plugin.dao.eth';
 
 type PluginType<T> = T extends 'token-voting.plugin.dao.eth'
-  ? VetoClient
+  ? TokenVotingClient
   : T extends 'multisig.plugin.dao.eth'
   ? MultisigClient
   : T extends 'veto.plugin.dao.eth'
@@ -25,11 +25,17 @@ export function isTokenVotingClient(
   client: TokenVotingClient | MultisigClient | VetoClient
 ): client is TokenVotingClient {
   if (!client || Object.keys(client).length === 0) return false;
+  return client instanceof TokenVotingClient;
+}
+export function isVetoVotingClient(
+  client: TokenVotingClient | MultisigClient | VetoClient
+): client is TokenVotingClient {
+  if (!client || Object.keys(client).length === 0) return false;
   return client instanceof VetoClient;
 }
 
 export function isMultisigClient(
-  client: TokenVotingClient | MultisigClient
+  client: TokenVotingClient | MultisigClient | VetoClient
 ): client is MultisigClient {
   if (!client || Object.keys(client).length === 0) return false;
   return client instanceof MultisigClient;
@@ -62,6 +68,9 @@ export const usePluginClient = <T extends PluginTypes = PluginTypes>(
           );
           break;
         case 'token-voting.plugin.dao.eth':
+          setPluginClient(new TokenVotingClient(ContextPlugin.fromContext(context)));
+          break;
+        case 'veto.plugin.dao.eth':
           setPluginClient(new VetoClient(ContextPlugin.fromContext(context)));
           break;
         default:

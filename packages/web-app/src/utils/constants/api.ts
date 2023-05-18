@@ -13,8 +13,7 @@ export const SUBGRAPH_API_URL: SubgraphNetworkUrl = {
   //   'https://subgraph.satsuma-prod.com/qHR2wGfc5RLi6/aragon/osx-goerli/version/v1.0.0/api',
   polygon:
     'https://subgraph.satsuma-prod.com/qHR2wGfc5RLi6/aragon/osx-polygon/api',
-  mumbai:
-    'https://subgraph.satsuma-prod.com/qHR2wGfc5RLi6/aragon/osx-mumbai/api',
+  mumbai: 'https://api.thegraph.com/subgraphs/name/martianatwork/carroll-duran',
   // arbitrum: undefined,
   // 'arbitrum-test': undefined,
   unsupported: undefined,

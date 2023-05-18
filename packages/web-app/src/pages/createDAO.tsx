@@ -46,7 +46,7 @@ export type CreateDaoFormData = {
   durationDays: string;
   minimumApproval: string;
   minimumParticipation: string;
-  eligibilityType: 'token' | 'anyone' | 'multisig';
+  eligibilityType: 'token' | 'anyone' | 'multisig' | 'veto';
   eligibilityTokenAmount: number | string;
   support: string;
   membership: string;

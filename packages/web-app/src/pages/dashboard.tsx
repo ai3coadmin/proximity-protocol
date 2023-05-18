@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
 
   const handleClipboardActions = useCallback(async () => {
     await navigator.clipboard.writeText(
-      `app.aragon.org/#/daos/${network}/${liveAddressOrEns}`
+      `${window.location.origin}/#/daos/${network}/${liveAddressOrEns}`
     );
     alert(t('alert.chip.inputCopied'));
   }, [alert, liveAddressOrEns, network, t]);
@@ -256,7 +256,7 @@ const Dashboard: React.FC = () => {
             daoName={liveDao.metadata.name}
             daoEnsName={toDisplayEns(liveDao.ensDomain)}
             daoAvatar={liveDao.metadata.avatar}
-            daoUrl={`app.aragon.org/#/daos/${network}/${liveAddressOrEns}`}
+            daoUrl={`${window.location.origin}/#/daos/${network}/${liveAddressOrEns}`}
             description={liveDao.metadata.description}
             created_at={formatDate(
               liveDao.creationDate.getTime() / 1000,
