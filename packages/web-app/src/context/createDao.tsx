@@ -258,7 +258,7 @@ const CreateDaoProvider: React.FC = ({children}) => {
       default:
         throw new Error(`Unknown dao type: ${membership}`);
     }
-
+    console.log('plugins', plugins);
     const metadata: DaoMetadata = {
       name: daoName,
       description: daoSummary,
@@ -318,6 +318,7 @@ const CreateDaoProvider: React.FC = ({children}) => {
     if (!client || !daoCreationData) {
       throw new Error('SDK client is not initialized correctly');
     }
+    console.log('daoCreationData', daoCreationData);
     const createDaoIterator = client?.methods.createDao(daoCreationData);
 
     // Check if createDaoIterator function is initialized

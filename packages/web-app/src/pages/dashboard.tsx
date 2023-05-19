@@ -78,6 +78,7 @@ const Dashboard: React.FC = () => {
     isLoading: liveDaoLoading,
     isSuccess,
   } = useDaoQuery(urlAddressOrEns, pollInterval);
+  console.log('liveDao', liveDao);
   const liveAddressOrEns = toDisplayEns(liveDao?.ensDomain) || liveDao?.address;
 
   // pending DAO
@@ -157,7 +158,7 @@ const Dashboard: React.FC = () => {
 
   const handleClipboardActions = useCallback(async () => {
     await navigator.clipboard.writeText(
-      `app.aragon.org/#/daos/${network}/${liveAddressOrEns}`
+      `${window.location.origin}/#/daos/${network}/${liveAddressOrEns}`
     );
     alert(t('alert.chip.inputCopied'));
   }, [alert, liveAddressOrEns, network, t]);
@@ -255,7 +256,7 @@ const Dashboard: React.FC = () => {
             daoName={liveDao.metadata.name}
             daoEnsName={toDisplayEns(liveDao.ensDomain)}
             daoAvatar={liveDao.metadata.avatar}
-            daoUrl={`app.aragon.org/#/daos/${network}/${liveAddressOrEns}`}
+            daoUrl={`${window.location.origin}/#/daos/${network}/${liveAddressOrEns}`}
             description={liveDao.metadata.description}
             created_at={formatDate(
               liveDao.creationDate.getTime() / 1000,
@@ -292,14 +293,14 @@ const Dashboard: React.FC = () => {
         {isDesktop ? (
           <DashboardContent
             daoAddressOrEns={liveAddressOrEns}
-            pluginType={liveDao.plugins[0].id as PluginTypes}
-            pluginAddress={liveDao.plugins[0].instanceAddress || ''}
+            pluginType={liveDao.plugins[0]?.id as PluginTypes}
+            pluginAddress={liveDao.plugins[0]?.instanceAddress || ''}
           />
         ) : (
           <MobileDashboardContent
             daoAddressOrEns={liveAddressOrEns}
-            pluginType={liveDao.plugins[0].id as PluginTypes}
-            pluginAddress={liveDao.plugins[0].instanceAddress || ''}
+            pluginType={liveDao.plugins[0]?.id as PluginTypes}
+            pluginAddress={liveDao.plugins[0]?.instanceAddress || ''}
           />
         )}
       </>
