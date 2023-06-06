@@ -15,6 +15,8 @@ export function isSupportedChainId(
   return SUPPORTED_CHAIN_ID.some(id => id === chainId);
 }
 
+export const ENS_SUPPORTED_NETWORKS = ['ethereum', 'goerli'];
+
 const SUPPORTED_NETWORKS = [
   // 'ethereum',
   // 'goerli',
@@ -77,8 +79,14 @@ export type ChainData = {
   rpc: string[];
   nativeCurrency: NativeTokenData;
   etherscanApi: string;
+  etherscanApiKey?: string;
   alchemyApi: string;
+  supportsEns: boolean;
+  lookupURL?: string;
 };
+
+const etherscanApiKey = import.meta.env.VITE_ETHERSCAN_API_KEY;
+const polygonscanApiKey = import.meta.env.VITE_POLYGONSCAN_API_KEY;
 
 export type ChainList = Record<SupportedNetworks, ChainData>;
 export const CHAIN_METADATA: ChainList = {
@@ -135,7 +143,9 @@ export const CHAIN_METADATA: ChainList = {
       decimals: 18,
     },
     etherscanApi: 'https://api.polygonscan.com/api',
+    etherscanApiKey: polygonscanApiKey,
     alchemyApi: 'https://polygon-mainnet.g.alchemy.com/v2',
+    supportsEns: false,
   },
   // 'arbitrum-test': {
   //   id: 421613,
@@ -190,7 +200,9 @@ export const CHAIN_METADATA: ChainList = {
       decimals: 18,
     },
     etherscanApi: 'https://api-testnet.polygonscan.com/api',
+    etherscanApiKey: polygonscanApiKey,
     alchemyApi: 'https://polygon-mumbai.g.alchemy.com/v2',
+    supportsEns: false,
   },
   unsupported: {
     id: 137,
@@ -207,5 +219,13 @@ export const CHAIN_METADATA: ChainList = {
     },
     etherscanApi: '',
     alchemyApi: '',
+    supportsEns: false,
   },
+};
+
+export const chainExplorerAddressLink = (
+  network: SupportedNetworks,
+  address: string
+) => {
+  return `${CHAIN_METADATA[network].explorer}address/${address}`;
 };

@@ -2,22 +2,23 @@
 import {ApolloClient} from '@apollo/client';
 import {
   Client,
+  DaoAction,
   DaoDetails,
   Erc20TokenDetails,
   IMintTokenParams,
   MultisigClient,
   MultisigVotingSettings,
+  Context as SdkContext,
   SupportedNetworks as SdkSupportedNetworks,
   TokenVotingClient,
   VotingMode,
-  Context as SdkContext,
 } from '@aragon/sdk-client';
-import {resolveIpfsCid} from '@aragon/sdk-common';
-import {Address} from '@aragon/ui-components/dist/utils/addresses';
+import {bytesToHex, resolveIpfsCid} from '@aragon/sdk-common';
 import {NavigationDao} from 'context/apolloClient';
 import {BigNumber, BigNumberish, constants, ethers, providers} from 'ethers';
 import {TFunction} from 'react-i18next';
 
+import {getEtherscanVerifiedContract} from 'services/etherscanAPI';
 import {fetchTokenData} from 'services/prices';
 import {
   AVATAR_IPFS_URL,
@@ -31,13 +32,17 @@ import {
   ActionAddAddress,
   ActionMintToken,
   ActionRemoveAddress,
+  ActionSCC,
   ActionUpdateMetadata,
   ActionUpdateMultisigPluginSettings,
   ActionUpdatePluginSettings,
   ActionWithdraw,
+  Input,
 } from 'utils/types';
 import {i18n} from '../../i18n.config';
+import {addABI, decodeMethod} from './abiDecoder';
 import {getTokenInfo} from './tokens';
+import {isAddress} from 'ethers/lib/utils';
 
 export function formatUnits(amount: BigNumberish, decimals: number) {
   if (amount.toString().includes('.') || !decimals) {
@@ -131,37 +136,45 @@ export async function decodeWithdrawToAction(
     return;
   }
 
-  const address =
+  const tokenAddress =
     decoded.type === 'native' ? constants.AddressZero : decoded?.tokenAddress;
+
   try {
-    const response = await getTokenInfo(
-      address,
+    const recipient = await Web3Address.create(
       provider,
-      CHAIN_METADATA[network].nativeCurrency
+      decoded.recipientAddressOrEns
     );
 
+    const [tokenInfo] = await Promise.all([
+      getTokenInfo(
+        tokenAddress,
+        provider,
+        CHAIN_METADATA[network].nativeCurrency
+      ),
+    ]);
+
     const apiResponse = await fetchTokenData(
-      address,
+      tokenAddress,
       apolloClient,
       network,
-      response.symbol
+      tokenInfo.symbol
     );
 
     return {
-      amount: Number(formatUnits(decoded.amount, response.decimals)),
+      amount: Number(formatUnits(decoded.amount, tokenInfo.decimals)),
       name: 'withdraw_assets',
-      to: decoded.recipientAddressOrEns,
+      to: recipient,
       tokenBalance: 0, // unnecessary?
-      tokenAddress: address,
+      tokenAddress: tokenAddress,
       tokenImgUrl: apiResponse?.imgUrl || '',
-      tokenName: response.name,
+      tokenName: tokenInfo.name,
       tokenPrice: apiResponse?.price || 0,
-      tokenSymbol: response.symbol,
-      tokenDecimals: response.decimals,
+      tokenSymbol: tokenInfo.symbol,
+      tokenDecimals: tokenInfo.decimals,
       isCustomToken: false,
     };
   } catch (error) {
-    console.error('Error fetching token data', error);
+    console.error('Error decoding withdraw action', error);
   }
 }
 
@@ -174,7 +187,7 @@ export async function decodeWithdrawToAction(
 export async function decodeMintTokensToAction(
   data: Uint8Array[] | undefined,
   client: TokenVotingClient | undefined,
-  daoTokenAddress: Address,
+  daoTokenAddress: string,
   totalVotingWeight: bigint,
   provider: providers.Provider,
   network: SupportedNetworks
@@ -240,7 +253,7 @@ export async function decodeAddMembersToAction(
   }
 
   const addresses: {
-    address: Address;
+    address: string;
   }[] = client.decoding.addAddressesAction(data)?.map(address => ({
     address,
   }));
@@ -268,7 +281,7 @@ export async function decodeRemoveMembersToAction(
     return;
   }
   const addresses: {
-    address: Address;
+    address: string;
   }[] = client.decoding.removeAddressesAction(data)?.map(address => ({
     address,
   }));
@@ -347,6 +360,63 @@ export async function decodeMetadataToAction(
     };
   } catch (error) {
     console.error('Error decoding update dao metadata action', error);
+  }
+}
+
+/**
+ * Decodes the provided DAO action into a smart contract compatible action.
+ *
+ * @param action - A DAO action to decode.
+ * @param network - The network on which the action is to be performed.
+ *
+ * @returns A promise that resolves to the decoded action
+ * or undefined if the action could not be decoded.
+ */
+export async function decodeSCCToAction(
+  action: DaoAction,
+  network: SupportedNetworks,
+  t: TFunction
+): Promise<ActionSCC | undefined> {
+  try {
+    const etherscanData = await getEtherscanVerifiedContract(
+      action.to,
+      network
+    );
+
+    // Check if the contract data was fetched successfully and if the contract has a verified source code
+    if (
+      etherscanData.status === '1' &&
+      etherscanData.result[0].ABI !== 'Contract source code not verified'
+    ) {
+      addABI(JSON.parse(etherscanData.result[0].ABI));
+      const decodedData = decodeMethod(bytesToHex(action.data));
+
+      // Check if the action data was decoded successfully
+      if (decodedData) {
+        const actionSCC: ActionSCC = {
+          name: 'external_contract_action',
+          contractAddress: action.to,
+          contractName: etherscanData.result[0].ContractName,
+          functionName: decodedData.name,
+          inputs: decodedData.params,
+        };
+
+        // Conditionally add PAYABLE_VALUE_INPUT if action.value is greater than zero
+        if (BigNumber.from(action.value).gt(0)) {
+          actionSCC.inputs.push({
+            ...getDefaultPayableAmountInput(t, network),
+            value: formatUnits(
+              action.value,
+              CHAIN_METADATA[network].nativeCurrency.decimals
+            ),
+          });
+        }
+
+        return actionSCC;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to decode SCC DAO action:', error);
   }
 }
 
@@ -552,8 +622,155 @@ export function translateToNetworkishName(
  * @returns ens name or empty string if ens name is null.dao.eth
  */
 export function toDisplayEns(ensName?: string) {
-  if (ensName)
-    if (ensName === 'null.dao.eth') return '';
-    else return ensName;
-  else return '';
+  if (!ensName || ensName === 'null.dao.eth') return '';
+
+  if (!ensName.includes('.dao.eth')) return `${ensName}.dao.eth`;
+  return ensName;
+}
+
+export function getDefaultPayableAmountInput(
+  t: TFunction,
+  network: SupportedNetworks
+): Input {
+  return {
+    name: getDefaultPayableAmountInputName(t),
+    type: 'uint256',
+    notice: t('scc.inputPayableAmount.description', {
+      tokenSymbol: CHAIN_METADATA[network].nativeCurrency.symbol,
+    }),
+  };
+}
+
+export function getDefaultPayableAmountInputName(t: TFunction) {
+  return t('scc.inputPayableAmount.label');
+}
+
+export class Web3Address {
+  // Declare private fields to hold the address, ENS name and the Ethereum provider
+  private _address: string | null;
+  private _ensName: string | null;
+  private _provider?: providers.Provider;
+
+  // Constructor for the Address class
+  constructor(
+    provider?: ethers.providers.Provider,
+    address?: string,
+    ensName?: string
+  ) {
+    // Initialize the provider, address and ENS name
+    this._provider = provider;
+    this._address = address || null;
+    this._ensName = ensName || null;
+  }
+
+  // Static method to create an Address instance
+  static async create(
+    provider?: providers.Provider,
+    addressOrEns?: {address?: string; ensName?: string} | string
+  ) {
+    // Determine whether we are dealing with an address, an ENS name or an object containing both
+    let addressToSet: string | undefined;
+    let ensNameToSet: string | undefined;
+    if (typeof addressOrEns === 'string') {
+      // If input is a string, treat it as address if it matches address structure, else treat as ENS name
+      if (ethers.utils.isAddress(addressOrEns)) {
+        addressToSet = addressOrEns;
+      } else {
+        ensNameToSet = addressOrEns;
+      }
+    } else {
+      addressToSet = addressOrEns?.address;
+      ensNameToSet = addressOrEns?.ensName;
+    }
+
+    // If no provider is given and no address is provided, throw an error
+    if (!provider && !addressToSet) {
+      throw new Error('If no provider is given, address must be provided');
+    }
+
+    // Create a new Address instance
+    const addressObj = new Web3Address(provider, addressToSet, ensNameToSet);
+
+    // If a provider is available, try to resolve the missing piece (address or ENS name)
+    try {
+      if (provider) {
+        if (addressToSet && !ensNameToSet) {
+          ensNameToSet =
+            (await provider.lookupAddress(addressToSet)) ?? undefined;
+          if (ensNameToSet) {
+            addressObj._ensName = ensNameToSet;
+          }
+        } else if (!addressToSet && ensNameToSet) {
+          addressToSet =
+            (await provider.resolveName(ensNameToSet)) ?? undefined;
+          if (addressToSet) {
+            addressObj._address = addressToSet;
+          }
+        }
+      }
+
+      // Return the Address instance
+      return addressObj;
+    } catch (error) {
+      throw new Error(
+        `Failed to create Web3Address: ${(error as Error).message}`
+      );
+    }
+  }
+
+  // Method to check if the stored address is valid
+  isAddressValid(): boolean {
+    if (!this._address) {
+      return false;
+    }
+    return ethers.utils.isAddress(this._address);
+  }
+
+  // Method to check if the stored ENS name is valid (resolves to an address)
+  async isValidEnsName(): Promise<boolean> {
+    if (!this._provider || !this._ensName) {
+      return false;
+    }
+    const address = await this._provider.resolveName(this._ensName);
+    return !!address;
+  }
+
+  // Getter for the address
+  get address() {
+    return this._address;
+  }
+
+  // Getter for the ENS name
+  get ensName() {
+    return this._ensName;
+  }
+
+  display(
+    options: {
+      shorten: boolean;
+      prioritize: 'ensName' | 'address';
+    } = {
+      shorten: false,
+      prioritize: 'ensName',
+    }
+  ) {
+    return options.prioritize === 'ensName'
+      ? String(
+          this._ensName || options.shorten
+            ? shortenAddress(this._address)
+            : this._address
+        )
+      : String(this._address || this._ensName);
+  }
+}
+
+export function shortenAddress(address: string | null) {
+  if (address === null) return '';
+  if (isAddress(address))
+    return (
+      address.substring(0, 5) +
+      '…' +
+      address.substring(address.length - 4, address.length)
+    );
+  else return address;
 }

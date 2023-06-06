@@ -173,7 +173,13 @@
       "tokenHoldersWithTkns": "Token holders with ≥ {{tokenAmount}} {{tokenSymbol}}",
       "earlyExecution": "Early execution",
       "voteReplacement": "Vote change",
-      "multisigMinimumApprovals": "of {{count}} authorized addresses"
+      "multisigMinimumApprovals": "of {{count}} authorized addresses",
+      "existingTokens": {
+        "currentHolders": "Current Holders"
+      },
+      "distributionLinkLabel": "View on block explorer",
+      "no": "No",
+      "yes": "Yes"
     },
     "author": "Author",
     "sec": "sec",
@@ -193,8 +199,8 @@
     "noResources": "No resources were added",
     "newTokens": "New tokens",
     "newHolders": "New holders",
-    "totalTokens": "Total tokens",
-    "totalHolders": "Total holders",
+    "totalTokens": "Total new token supply",
+    "totalHolders": "Total new holders",
     "mintable": "Mintable",
     "new": "New",
     "pendingTransaction": "Pending transaction …",
@@ -220,7 +226,12 @@
     "addWalletsDescriptionLinkLabel": "read our guide",
     "addWalletsDescription": "Wallets can create proposals, propose to send funds in and out of the treasury, and vote in your DAO.",
     "daoEnsName": "ENS Subdomain",
-    "ens": "ENS"
+    "ens": "ENS",
+    "currentTokenSupply": "Current token supply",
+    "helptext": {
+      "snapshot": "Based on this proposal snapshot"
+    },
+    "currentHolders": "Current holders"
   },
   "placeHolders": {
     "selectToken": "Select a token …",
@@ -281,6 +292,9 @@
         "edit": "Edit proposal",
         "readFullProposal": "Read full proposal",
         "closeFullProposal": "Close full proposal"
+      },
+      "alert": {
+        "voted": "You have already voted."
       }
     },
     "settings": {
@@ -523,7 +537,7 @@
     "mintTokensSubtitle": "Mint more DAO tokens and distribute to wallets.",
     "withdrawAssetsSubtitle": "Create a proposal to withdraw assets to a wallet.",
     "withdrawAssetsActionSubtitle": "Withdraw assets from the DAO treasury",
-    "externalContract": "Interact with a contract",
+    "externalContract": "Smart contract composer",
     "externalContractSubtitle": "Interact with an external contract on the chain your DAO is deployed on.",
     "changeMinimumApproval": "Change minimum approval",
     "changeMinimumApprovalSubtitle": "Modify minimum approval of this DAO."
@@ -548,7 +562,8 @@
       "amountSubtitle": "Amount is calculated in number of tokens, not dollar value",
       "utcMenu": {
         "title": "Select a UTC timezone"
-      }
+      },
+      "ctaAddAnother": "Add another withdraw"
     },
     "setupVoting": {
       "title": "Initiate the vote",
@@ -589,6 +604,9 @@
     "reviewProposal": {
       "heading": "Review proposal",
       "description": "Check to make sure everything is correct before putting it to vote. You can't edit a proposal once it's published."
+    },
+    "daoAddress": {
+      "alertCritical": "You can't withdraw money to your own DAO treasury."
     }
   },
   "createDAO": {
@@ -628,7 +646,25 @@
       "warningTitle": "Changing the list",
       "warningSubtitle": "If you want to add addresses after creating your DAO, you will need to create a proposal to be voted by the members.",
       "newTokenSubtitle": "No, I would like to create a token.",
-      "existingToken": "Yes",
+      "existingToken": {
+        "title": "Use an existing token",
+        "description": "Use an ERC20 token that is already issued. To learn more about what it’s important if you use an existing Token, read first {{link}}.",
+        "descriptionLinkLabel": "our guide",
+        "questionLabel": "Does your community already have an ERC20 token?",
+        "answerNegative": "No",
+        "answerPositive": "Yes",
+        "inputLabel": "Contract address",
+        "inputDescription": "Enter the contract address. We recommend pasting it directly from a block explorer.",
+        "verificationLabelStandard": "Standard",
+        "verificationLabelSupply": "Total supply",
+        "verificationLabelHolders": "Current holders",
+        "verificationLabelGovernance": "Governance",
+        "verificationLinkLabel": "View details",
+        "verificationAlertSuccessTitle": "Compatible for governance",
+        "verificationAlertSuccessDescription": "This token can be used for direct use of onchain governance (support of ERC20Votes standard).",
+        "verificationGovernanceSuccess": "Supported",
+        "verificationLoading": "Verifying governance compatibility …"
+      },
       "existingTokenSubtitle": "Yes, we already have a token.",
       "addressMembership": "Token Address",
       "tokenMembership": "Token holders",
@@ -806,6 +842,9 @@
       "titleSearch": "No result found for {{query}}",
       "title": "No voters yet",
       "subtitle": "Search for another wallet address or ENS"
+    },
+    "label": {
+      "in": "In"
     }
   },
   "explore": {
@@ -907,35 +946,6 @@
       "buildingDAO": "Building your DAO"
     }
   },
-  "scc": {
-    "labels": {
-      "connect": "Connect smart contract",
-      "singleContractConnected": "One connected contract",
-      "nContractsConnected": "{{numConnected}} Connected smart contracts",
-      "searchPlaceholder": "Type to find any action …",
-      "singleActionAvailable": "One write action",
-      "nActionsAvailable": "{{numConnected}} write actions"
-    },
-    "emptyState": {
-      "modalTitle": "Smart contract composer",
-      "title": "No smart contract",
-      "description": "Add a smart contract to interact with its actions",
-      "primaryBtnLabel": "Connect smart contract"
-    },
-    "addressValidation": {
-      "modalTitle": "Connect smart contract",
-      "title": "Smart contract address",
-      "description": "Enter the smart contract address. It's best to copy this address directly from",
-      "actionLabelWaiting": "Validate smart contract",
-      "actionLabelLoading": "Validating smart contract …",
-      "actionLabelSuccess": "Compose actions",
-      "successLabel": "Smart contract validated -> {{contractName}}"
-    },
-    "selectionEmptyState": {
-      "title": "Select smart contract",
-      "description": "Select a smart contract to compose any actions or connect a new smart contract if ..."
-    }
-  },
   "app": {
     "feedback": {
       "linkLabel": "Give feedback",
@@ -964,6 +974,126 @@
       "cancelLabel": "No, stay",
       "titleProposalCreation": "Exit proposal creation",
       "titleDaoCreation": "Exit DAO creation"
+    },
+    "claimPoap": {
+      "ctaLabel": "Claim POAP now",
+      "ctaURL": "https://poap-claim-app.aragon.org/",
+      "title": "Claim your DAO Builder POAP"
+    },
+    "mintTokensToTreasury": {
+      "title": "Minting tokens to the DAO treasury",
+      "description": "The DAO cannot cast votes. Beware of minting too many tokens to your DAO treasury, because you may not be able to reach minimum participation and thus will be unable to execute any proposal actions.",
+      "alertTitle": "Potential risk for your DAO",
+      "alertDescription": "Instead of minting tokens to your DAO treasury, consider minting them to a member's wallet address so the tokens can be used for voting. ",
+      "step1CtaLabel": "Back to token minting",
+      "step1CancelLabel": "Proceed with DAO address",
+      "inputLabel": "Confirm with DAO address",
+      "inputHelptext": "To confirm, fill in the DAO contract address below.",
+      "step2CtaLabel": "Confirm",
+      "step2CancelLabel": "Cancel",
+      "alertChipSuccess": "DAO treasury removed",
+      "alertChipCritical": "DAO treasury added"
+    }
+  },
+  "scc": {
+    "labels": {
+      "connect": "Connect smart contract",
+      "singleContractConnected": "One connected contract",
+      "nContractsConnected": "{{numConnected}} Connected smart contracts",
+      "searchPlaceholder": "Type to find any action …",
+      "singleActionAvailable": "One write action",
+      "nActionsAvailable": "{{numConnected}} write actions"
+    },
+    "addressValidation": {
+      "modalTitle": "Connect smart contract",
+      "title": "Smart contract address",
+      "description": "Enter the smart contract address. It's best to copy this address directly from",
+      "actionLabelWaiting": "Validate smart contract",
+      "actionLabelLoading": "Validating smart contract …",
+      "actionLabelSuccess": "Compose actions",
+      "successLabel": "Smart contract validated -> {{contractName}}"
+    },
+    "selectionEmptyState": {
+      "title": "Select smart contract",
+      "description": "Select a smart contract to compose any actions or connect a new smart contract if ..."
+    },
+    "validation": {
+      "sourcifyStatusPending": "Validating on Sourcify …",
+      "etherscanStatusPending": "Validating on Etherscan …",
+      "sourcifyStatusSuccess": "Verified on Sourcify",
+      "etherscanStatusSuccess": "Verified on Etherscan",
+      "sourcifyStatusWarning": "Partially verified on Sourcify",
+      "sourcifyStatusCritical": "Not verified on Sourcify",
+      "etherscanStatusCritical": "Not verified on Etherscan",
+      "addressInputHelp": "Enter the contract address. We recommend pasting it directly from a block explorer.",
+      "cancelLabel": "Cancel validation",
+      "explorerLinkLabel": "View details",
+      "ctaLabelWaiting": "Validate contract address",
+      "ctaLabelSuccess": "Create action",
+      "ctaLabelWarning": "Add ABI function",
+      "modalTitle": "Connect smart contract",
+      "addressInputLabel": "Contract address",
+      "addressInput": {
+        "alertCritical": "Address not valid."
+      },
+      "explorerLinkEtherscanURL": "https://etherscan.io/address/{contractAddress}#code",
+      "explorerLinkSourcifyURL": "https://sourcify.dev/#/lookup/{contractAddress}",
+      "explorerLinkPolyscanURL": "https://polygonscan.com/address/{contractAddress}#code"
+    },
+    "emptyState": {
+      "ctaLabel": "Connect smart contract",
+      "title": "No smart contract added",
+      "description": "Add a smart contract to interact with it. To learn more, read {{link}}.",
+      "modalTitle": "Smart contract composer",
+      "descriptionLinkURL": "https://aragon.org/how-to/interact-with-external-contracts-from-your-dao",
+      "descriptionLinkLabel": "our guide"
+    },
+    "abi": {
+      "abiInputLabel": "ABI function",
+      "abiInputHelp": "To generate actions for an unverified smart contract, add ABI functions. To learn how to add ABI functions, read {{link}}.",
+      "ctaLabelWaiting": "Validate ABI Function",
+      "ctaLabelLoading": "Validating ABI Function …",
+      "abiInputHelpLinkURL": "https://",
+      "abiInputHelpLinkLabel": "our guide",
+      "ctaLabelCritical": "Retry ABI validation",
+      "abiInput": {
+        "alertWarning": "Function validated",
+        "alertCritical": "Input failed. Try again."
+      }
+    },
+    "listContracts": {
+      "searchInputPlaceholder": "Type to find an action",
+      "pretitle": "{{amount}} connected smart contracts",
+      "contractAmountActions": "{{amount}} actions",
+      "ctaLabel": "Connect smart contract",
+      "learnLinkLabel": "Learn more",
+      "learnLinkURL": "https://aragon.org/how-to/interact-with-external-contracts-from-your-dao"
+    },
+    "detailContract": {
+      "dropdownExplorerLinkLabel": "See on block explorer",
+      "dropdownCopyLabel": "Copy contract address",
+      "dropdownRemoveLabel": "Remove smart contract",
+      "ctaLabel": "Add action",
+      "checkboxMultipleLabel": "Add another action"
+    },
+    "inputPayableAmount": {
+      "description": "Enter the required amount of {{tokenSymbol}} to be paid.",
+      "label": "Payable Amount"
+    }
+  },
+  "inputWallet": {
+    "placeholder": "ENS or 0x…",
+    "ensAlertSuccess": "ENS resolved successfully",
+    "addressAlertSuccess": "Address resolved successfully",
+    "ensAlertWarning": "This network does not support ENS domains",
+    "ensAlertCirtical": "Invalid ENS",
+    "addressAlertCritical": "Invalid address"
+  },
+  "modalWarning": {
+    "mintToken": {
+      "title": "Another proposal is active",
+      "description": "Beware of another proposal that mints additional tokens. This implies that the token supply may not be the final one and that it may affect future votes.",
+      "ctaLabel": "OK, understood"
     }
   }
 }
