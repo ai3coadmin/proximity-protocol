@@ -55,6 +55,11 @@ export interface IVetoClientMethods extends IClientCore {
   getToken: (
     pluginAddress: string
   ) => Promise<Erc20TokenDetails | Erc721TokenDetails | null>;
+  deposit: (
+    pluginAddress: string,
+    amount: string,
+    reference: string
+  ) => Promise<void>;
 }
 
 export interface IVetoClientEncoding extends IClientCore {

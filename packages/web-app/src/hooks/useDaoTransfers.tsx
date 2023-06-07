@@ -102,7 +102,7 @@ export const useDaoTransfers = (
 
         // filter the erc20 token deposits
         const erc20DepositsListPromises =
-          alchemyTransfersList.result.transfers.map(
+          alchemyTransfersList?.result?.transfers?.map(
             async ({from, rawContract, metadata, hash}: AlchemyTransfer) => {
               const {name, symbol, decimals} = await getTokenInfo(
                 rawContract.address,

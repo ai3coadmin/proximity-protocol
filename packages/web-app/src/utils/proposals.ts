@@ -357,10 +357,13 @@ export function getProposalStatusSteps(
         {...getPublishedProposalStep(t, creationDate, publishedBlock)},
         {...getActiveProposalStep(t, startDate, 'done')},
         {
-          label:
-            pluginType === 'token-voting.plugin.dao.eth'
-              ? t('governance.statusWidget.defeated')
-              : t('governance.statusWidget.expired'),
+          label: [
+            'token-voting.plugin.dao.eth',
+            'capitaldaomumbai.plugin.dao.eth',
+            'veto.plugin.dao.eth',
+          ].includes(pluginType)
+            ? t('governance.statusWidget.defeated')
+            : t('governance.statusWidget.expired'),
           mode: 'failed',
           date: `${format(
             endDate,

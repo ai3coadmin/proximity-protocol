@@ -39,6 +39,8 @@ import {
   EmptyStateContainer,
   EmptyStateHeading,
 } from 'containers/pageEmptyState';
+import {useDaoMembers} from '../hooks/useDaoMembers';
+import {useClient} from '../hooks/useClient';
 //import {useGlobalModalContext} from 'context/globalModals';
 
 enum DaoCreationState {
@@ -193,6 +195,12 @@ const Dashboard: React.FC = () => {
   /*************************************************
    *                    Render                     *
    *************************************************/
+  console.log(
+    'LOADING...',
+    pendingDaoLoading,
+    liveDaoLoading,
+    favoritedDaosLoading
+  );
   if (pendingDaoLoading || liveDaoLoading || favoritedDaosLoading) {
     return <Loading />;
   }

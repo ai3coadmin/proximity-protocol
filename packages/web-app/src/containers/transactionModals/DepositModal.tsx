@@ -5,7 +5,7 @@ import {
   WalletInputLegacy,
   shortenAddress,
 } from '@aragon/ui-components';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {generatePath, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
@@ -18,6 +18,9 @@ import {useDaoDetailsQuery} from 'hooks/useDaoDetails';
 import {CHAIN_METADATA} from 'utils/constants';
 import {toDisplayEns} from 'utils/library';
 import {AllTransfers} from 'utils/paths';
+import {PluginTypes, usePluginClient} from '../../hooks/usePluginClient';
+import {InstalledPluginListItem} from '@aragon/sdk-client';
+import {VetoClient} from '../../custom/sdk-client/veto';
 
 const DepositModal: React.FC = () => {
   const {t} = useTranslation();
@@ -26,11 +29,33 @@ const DepositModal: React.FC = () => {
   const {network} = useNetwork();
   const {alert} = useAlertContext();
   const navigate = useNavigate();
-
+  const {id: pluginType, instanceAddress: pluginAddress} =
+    daoDetails?.plugins[0] || ({} as InstalledPluginListItem);
+  const pluginClient = usePluginClient(pluginType as PluginTypes);
+  const [depositAmount, setDepositAmount] = useState<string>();
+  const [depositLoading, setDepositLoading] = useState<boolean>(false);
   const copyToClipboard = (value: string | undefined) => {
     navigator.clipboard.writeText(value || '');
     alert(t('alert.chip.inputCopied'));
   };
+
+  const handleDepositClicked = useCallback(async () => {
+    console.log('handleDepositClicked', pluginAddress, pluginType);
+    setDepositLoading(true);
+    try {
+      if (
+        pluginClient instanceof VetoClient &&
+        depositAmount &&
+        parseFloat(depositAmount) > 0
+      ) {
+        await pluginClient?.methods.deposit(pluginAddress, depositAmount, '');
+      }
+    } catch (e) {
+      console.log('handleDepositClicked error', e);
+    }
+    setDepositLoading(false);
+    close('deposit');
+  }, [depositAmount, pluginAddress, pluginClient, pluginType]);
 
   const handleCtaClicked = useCallback(() => {
     close('deposit');
@@ -87,6 +112,13 @@ const DepositModal: React.FC = () => {
             onAdornmentClick={() => copyToClipboard(daoDetails?.address)}
             disabledFilled
           />
+          {pluginClient instanceof VetoClient && (
+            <WalletInputLegacy
+              placeholder={'Deposit Amount'}
+              onChange={e => setDepositAmount(e.target.value)}
+              value={depositAmount}
+            />
+          )}
           <Link
             href={
               CHAIN_METADATA[network].explorer +
@@ -100,14 +132,23 @@ const DepositModal: React.FC = () => {
             <ButtonText
               mode="primary"
               size="large"
+              label={t('modal.deposit.depositLabel')}
+              onClick={handleDepositClicked}
+              disabled={depositLoading || parseFloat(depositAmount || '0') <= 0}
+            />
+            <ButtonText
+              mode="ghost"
+              size="large"
               label={t('modal.deposit.ctaLabel')}
               onClick={handleCtaClicked}
+              disabled={depositLoading}
             />
             <ButtonText
               mode="secondary"
               size="large"
               label={t('modal.deposit.cancelLabel')}
               onClick={() => close('deposit')}
+              disabled={depositLoading}
             />
           </ActionWrapper>
         </BodyWrapper>

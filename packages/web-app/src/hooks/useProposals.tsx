@@ -76,7 +76,11 @@ export function useProposals(
   );
 
   const isMultisigPlugin = type === 'multisig.plugin.dao.eth';
-  const isTokenBasedPlugin = type === 'token-voting.plugin.dao.eth';
+  const isTokenBasedPlugin = [
+    'token-voting.plugin.dao.eth',
+    'capitaldaomumbai.plugin.dao.eth',
+    'veto.plugin.dao.eth',
+  ].includes(type || '');
 
   // return cache keys and variables based on the type of plugin;
   const getCachedProposalData = useCallback(() => {

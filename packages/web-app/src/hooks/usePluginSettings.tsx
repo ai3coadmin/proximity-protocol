@@ -28,6 +28,7 @@ export function usePluginSettings(
   pluginAddress: string,
   type: PluginTypes
 ): HookData<SupportedVotingSettings> {
+  console.log('plugin type', type);
   const [data, setData] = useState<SupportedVotingSettings>(
     {} as SupportedVotingSettings
   );

@@ -173,7 +173,11 @@ export const EditMsSettings: React.FC<EditMsSettingsProps> = ({daoDetails}) => {
     setValue('multisigWallets', multisigWallets);
     setValue(
       'membership',
-      daoDetails?.plugins[0].id === 'token-voting.plugin.dao.eth'
+      [
+        'token-voting.plugin.dao.eth',
+        'capitaldaomumbai.plugin.dao.eth',
+        'veto.plugin.dao.eth',
+      ].includes(daoDetails?.plugins[0].id || '')
         ? 'token'
         : 'multisig'
     );

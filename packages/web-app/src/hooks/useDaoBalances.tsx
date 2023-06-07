@@ -51,7 +51,7 @@ export const useDaoBalances = (
         let nativeTokenBalances = [] as Array<AssetBalance>;
 
         // Filter out tokens with a zero balance
-        const nonZeroBalances = tokenList.result.tokenBalances?.filter(
+        const nonZeroBalances = tokenList?.result?.tokenBalances?.filter(
           (token: {tokenBalance: string}) => {
             return BigInt(token.tokenBalance) !== BigInt(0);
           }

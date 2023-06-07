@@ -573,11 +573,7 @@ export function sleepFor(time = 600) {
 export const translateToAppNetwork = (
   sdkNetwork: SdkContext['network']
 ): SupportedNetworks => {
-  if (typeof sdkNetwork !== 'string') {
-    return 'unsupported';
-  }
-
-  switch (sdkNetwork) {
+  switch (sdkNetwork.name) {
     // case 'mainnet':
     //   return 'ethereum';
     // case 'goerli':

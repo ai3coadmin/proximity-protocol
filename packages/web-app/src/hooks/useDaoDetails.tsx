@@ -172,15 +172,15 @@ export const useDaoDetailsQuery = () => {
     navigate,
   ]);
   // TODO: we assume that the Plugin is not found, and it should be using our plugin
-  if (apiResponse.data?.plugins.length === 0) {
-    apiResponse.data.plugins = [
-      {
-        version: 'v1',
-        id: 'veto.plugin.dao.eth',
-        instanceAddress: import.meta.env.VITE_VETO_PLUGIN_ADDRESS,
-      },
-    ];
-  }
+  // if (apiResponse.data?.plugins.length === 0) {
+  //   apiResponse.data.plugins = [
+  //     {
+  //       version: 'v1',
+  //       id: 'veto.plugin.dao.eth',
+  //       instanceAddress: import.meta.env.VITE_VETO_PLUGIN_ADDRESS,
+  //     },
+  //   ];
+  // }
 
   return apiResponse;
 };

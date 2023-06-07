@@ -246,7 +246,14 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
       }
 
       // cache token voting vote
-      if (pluginType === 'token-voting.plugin.dao.eth' && tokenAddress) {
+      if (
+        [
+          'token-voting.plugin.dao.eth',
+          'capitaldaomumbai.plugin.dao.eth',
+          'veto.plugin.dao.eth',
+        ].includes(pluginType || '') &&
+        tokenAddress
+      ) {
         // fetch token user balance, ie vote weight
         const weight: BigNumber = await fetchBalance(
           tokenAddress,
@@ -297,7 +304,13 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
       );
 
       // cache token based execution
-      if (pluginType === 'token-voting.plugin.dao.eth') {
+      if (
+        [
+          'token-voting.plugin.dao.eth',
+          'capitaldaomumbai.plugin.dao.eth',
+          'veto.plugin.dao.eth',
+        ].includes(pluginType || '')
+      ) {
         newCache = {
           ...cachedTokenBaseExecution,
           [cachedProposalId]: true,

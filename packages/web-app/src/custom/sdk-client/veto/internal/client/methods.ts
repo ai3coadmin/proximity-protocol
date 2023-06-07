@@ -72,6 +72,8 @@ import {
 import {TokenType} from '@aragon/sdk-client';
 import {SubgraphDaoListItem} from '@aragon/sdk-client/dist/interfaces';
 import {QueryDaos} from '../graphql-queries/dao';
+import {TestVotingToken__factory} from './TestVotingToken__factory';
+import {BigNumber} from 'ethers';
 export const UNSUPPORTED_DAO_METADATA_LINK: DaoMetadata = {
   name: '(unsupported metadata link)',
   description: '(the metadata link is not supported)',
@@ -118,10 +120,16 @@ export class VetoClientMethods
       address,
     };
     const name = 'DAOs';
-    type T = {daos: SubgraphDaoListItem[]};
-    const {daos} = await this.graphql.request<T>({query, params, name});
+    type T = {
+      pluginRepo: {
+        installations: {
+          dao: SubgraphDaoListItem;
+        }[];
+      };
+    };
+    const {pluginRepo} = await this.graphql.request<T>({query, params, name});
     return Promise.all(
-      daos.map(async (dao: SubgraphDaoListItem): Promise<DaoListItem> => {
+      pluginRepo.installations.map(async ({dao}): Promise<DaoListItem> => {
         if (!dao.metadata) {
           return toDaoListItem(dao, EMPTY_DAO_METADATA_LINK);
         }
@@ -609,5 +617,43 @@ export class VetoClientMethods
     } catch (err) {
       throw new GraphQLError('token');
     }
+  }
+
+  public async deposit(
+    pluginAddress: string,
+    amount: string,
+    reference: string
+  ): Promise<void> {
+    const signer = this.web3.getConnectedSigner();
+    if (!signer) {
+      throw new NoSignerError();
+    } else if (!signer.provider) {
+      throw new NoProviderError();
+    }
+
+    const tokenVotingContract = VetoPlugin__factory.connect(
+      pluginAddress,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      signer
+    );
+    console.log('handleDepositClicked veto', pluginAddress);
+    const token = await tokenVotingContract.getVotingToken();
+    const erc20 = TestVotingToken__factory.connect(
+      token,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      signer
+    );
+    const decimals = await erc20.decimals();
+    const nativeAmount = BigNumber.from(amount).mul(
+      BigNumber.from('10').pow(decimals)
+    );
+    // const nativeAmount = (parseFloat(amount) * 10 ** decimals).toString();
+    const erc20Tx = await erc20.approve(pluginAddress, nativeAmount);
+    await erc20Tx.wait();
+    const tx = await tokenVotingContract.deposit(nativeAmount, reference);
+
+    await tx.wait();
   }
 }

@@ -86,7 +86,13 @@ export const useDaoProposal = (
       }
 
       // token voting
-      if (pluginType === 'token-voting.plugin.dao.eth') {
+      if (
+        [
+          'token-voting.plugin.dao.eth',
+          'capitaldaomumbai.plugin.dao.eth',
+          'veto.plugin.dao.eth',
+        ].includes(pluginType || '')
+      ) {
         return {
           proposalCacheKey: PENDING_PROPOSALS_KEY,
           proposalCacheVar: pendingTokenBasedProposalsVar,
