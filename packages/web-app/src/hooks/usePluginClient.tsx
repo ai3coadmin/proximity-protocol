@@ -9,6 +9,7 @@ import {useClient} from './useClient';
 import {VetoClient} from '../custom/sdk-client/veto';
 
 export type PluginTypes =
+  | 'capitaldaomumbai.plugin.dao.eth'
   | 'veto.plugin.dao.eth'
   | 'token-voting.plugin.dao.eth'
   | 'multisig.plugin.dao.eth';
@@ -18,6 +19,8 @@ type PluginType<T> = T extends 'token-voting.plugin.dao.eth'
   : T extends 'multisig.plugin.dao.eth'
   ? MultisigClient
   : T extends 'veto.plugin.dao.eth'
+  ? VetoClient
+  : T extends 'capitaldaomumbai.plugin.dao.eth'
   ? VetoClient
   : never;
 
@@ -61,6 +64,7 @@ export const usePluginClient = <T extends PluginTypes = PluginTypes>(
     if (!pluginType) {
       setPluginClient(undefined);
     } else {
+      console.log('pluginType', pluginType);
       switch (pluginType as PluginTypes) {
         case 'multisig.plugin.dao.eth':
           setPluginClient(
@@ -68,9 +72,12 @@ export const usePluginClient = <T extends PluginTypes = PluginTypes>(
           );
           break;
         case 'token-voting.plugin.dao.eth':
-          setPluginClient(new TokenVotingClient(ContextPlugin.fromContext(context)));
+          setPluginClient(new VetoClient(ContextPlugin.fromContext(context)));
           break;
         case 'veto.plugin.dao.eth':
+          setPluginClient(new VetoClient(ContextPlugin.fromContext(context)));
+          break;
+        case 'capitaldaomumbai.plugin.dao.eth':
           setPluginClient(new VetoClient(ContextPlugin.fromContext(context)));
           break;
         default:

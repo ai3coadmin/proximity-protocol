@@ -30,7 +30,11 @@ export const useWalletCanVote = (
   const [isLoading, setIsLoading] = useState(false);
 
   const isMultisigClient = pluginType === 'multisig.plugin.dao.eth';
-  const isTokenVotingClient = pluginType === 'token-voting.plugin.dao.eth';
+  const isTokenVotingClient = [
+    'token-voting.plugin.dao.eth',
+    'capitaldaomumbai.plugin.dao.eth',
+    'veto.plugin.dao.eth',
+  ].includes(pluginType || '');
 
   const client = usePluginClient(pluginType);
 

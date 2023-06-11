@@ -39,6 +39,9 @@ import {
   EmptyStateContainer,
   EmptyStateHeading,
 } from 'containers/pageEmptyState';
+import {useDaoMembers} from '../hooks/useDaoMembers';
+import {useClient} from '../hooks/useClient';
+//import {useGlobalModalContext} from 'context/globalModals';
 
 enum DaoCreationState {
   ASSEMBLING_DAO,
@@ -54,6 +57,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const {network} = useNetwork();
   const {dao: urlAddressOrEns} = useParams();
+  // const {open} = useGlobalModalContext();
 
   const [pollInterval, setPollInterval] = useState(0);
   const [daoCreationState, setDaoCreationState] = useState<DaoCreationState>(
@@ -85,14 +89,20 @@ const Dashboard: React.FC = () => {
   const {data: pendingDao, isLoading: pendingDaoLoading} =
     usePendingDao(urlAddressOrEns);
 
-  const removePendingDaoMutation = useRemovePendingDaoMutation(() =>
+  const removePendingDaoMutation = useRemovePendingDaoMutation(() => {
     navigate(
       generatePath(DashboardPath, {
         network,
         dao: liveAddressOrEns,
       })
-    )
-  );
+    );
+    /*
+    const networkInfo = CHAIN_METADATA[network];
+    if (!networkInfo.testnet) {
+      open('poapClaim');
+    }
+    */
+  });
 
   const favoriteDaoMatchPredicate = useCallback(
     (favoriteDao: NavigationDao) => {
@@ -185,6 +195,12 @@ const Dashboard: React.FC = () => {
   /*************************************************
    *                    Render                     *
    *************************************************/
+  console.log(
+    'LOADING...',
+    pendingDaoLoading,
+    liveDaoLoading,
+    favoritedDaosLoading
+  );
   if (pendingDaoLoading || liveDaoLoading || favoritedDaosLoading) {
     return <Loading />;
   }

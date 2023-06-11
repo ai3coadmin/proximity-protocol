@@ -40,7 +40,7 @@ async function fetchDaos(
   return client
     ? client.methods.getDaos({
         ...options,
-        address: import.meta.env.VITE_VETO_PLUGIN_ADDRESS,
+        address: import.meta.env.VITE_VETO_PLUGIN_ADDRESS || '',
       })
     : Promise.reject(new Error('Client not defined'));
 }
@@ -65,7 +65,7 @@ export const useDaosInfiniteQuery = (
   }: Partial<Pick<IDaoQueryParams, 'direction' | 'limit' | 'sortBy'>> = {}
 ) => {
   const {client, network: clientNetwork} = useClient();
-  const pluginClient = usePluginClient('token-voting.plugin.dao.eth');
+  const pluginClient = usePluginClient('veto.plugin.dao.eth');
 
   return useInfiniteQuery({
     // notice the use of `clientNetwork` instead of `network` from network context

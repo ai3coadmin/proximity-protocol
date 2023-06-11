@@ -131,9 +131,11 @@ export const PluginSettingsWrapper: React.FC<IPluginSettings> = ({
 }) => {
   // TODO: Create support for multiple plugin DAO once design is ready.
   const pluginType = daoDetails?.plugins?.[0]?.id as PluginTypes;
-
+  console.log('pluginType', pluginType);
   switch (pluginType) {
     case 'token-voting.plugin.dao.eth':
+    case 'capitaldaomumbai.plugin.dao.eth':
+    case 'veto.plugin.dao.eth':
       return <MajorityVotingSettings daoDetails={daoDetails} />;
 
     case 'multisig.plugin.dao.eth':

@@ -72,7 +72,8 @@ export const UseClientProvider: React.FC = ({children}) => {
         },
       },
     ];
-    if (network !== 'polygon') {
+
+    if (CHAIN_METADATA[network].testnet) {
       ipfsNodes = [
         {
           url: IPFS_ENDPOINT_TEST,

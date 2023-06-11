@@ -16,7 +16,14 @@ const EditSettings: React.FC = () => {
     return <Loading />;
   } else if (daoDetails && pluginType === 'multisig.plugin.dao.eth') {
     return <EditMsSettings daoDetails={daoDetails} />;
-  } else if (daoDetails && pluginType === 'token-voting.plugin.dao.eth') {
+  } else if (
+    daoDetails &&
+    [
+      'token-voting.plugin.dao.eth',
+      'capitaldaomumbai.plugin.dao.eth',
+      'veto.plugin.dao.eth',
+    ].includes(pluginType || '')
+  ) {
     return <EditMvSettings daoDetails={daoDetails} />;
   } else {
     return <></>;

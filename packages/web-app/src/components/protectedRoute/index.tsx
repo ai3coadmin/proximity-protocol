@@ -122,7 +122,13 @@ const ProtectedRoute: React.FC = () => {
   // wallet connected and on right network, authenticate
   useEffect(() => {
     if (address && !isOnWrongNetwork && pluginType) {
-      if (pluginType === 'token-voting.plugin.dao.eth') {
+      if (
+        [
+          'token-voting.plugin.dao.eth',
+          'capitaldaomumbai.plugin.dao.eth',
+          'veto.plugin.dao.eth',
+        ].includes(pluginType || '')
+      ) {
         gateTokenBasedProposal();
       } else {
         gateMultisigProposal();

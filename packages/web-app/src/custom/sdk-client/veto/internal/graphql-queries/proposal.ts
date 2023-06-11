@@ -54,11 +54,11 @@ export const QueryVetoProposal = gql`
 `;
 export const QueryVetoProposals = gql`
   query VetoProposals(
-    $where: VetoProposal_filter!
+    $where: TokenVotingProposal_filter!
     $limit: Int!
     $skip: Int!
     $direction: OrderDirection!
-    $sortBy: VetoProposal_orderBy!
+    $sortBy: TokenVotingProposal_orderBy!
   ) {
     tokenVotingProposals(
       where: $where
@@ -80,7 +80,6 @@ export const QueryVetoProposals = gql`
       startDate
       endDate
       executed
-      executable
       totalVotingPower
       plugin {
         token {

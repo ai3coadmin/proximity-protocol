@@ -10,16 +10,15 @@ import {
   IconRadioCancel,
   Option,
   SearchInput,
-  VotersTable,
   VoterType,
+  VotersTable,
 } from '@aragon/ui-components';
-
-import {shortenAddress} from '@aragon/ui-components/src/utils/addresses';
 import React, {useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
 
 import {StateEmpty} from 'components/stateEmpty';
+import {shortenAddress} from 'utils/library';
 import BreakdownTab from './breakdownTab';
 import InfoTab from './infoTab';
 
@@ -39,6 +38,7 @@ export type VotingTerminalProps = {
   voteNowDisabled?: boolean;
   startDate?: string;
   endDate?: string;
+  preciseEndDate?: string;
   minApproval?: number;
   minParticipation?: string;
   currentParticipation?: string;
@@ -80,6 +80,7 @@ export const VotingTerminal: React.FC<VotingTerminalProps> = ({
   token,
   startDate,
   endDate,
+  preciseEndDate,
   status,
   statusLabel,
   strategy,
@@ -193,6 +194,7 @@ export const VotingTerminal: React.FC<VotingTerminalProps> = ({
           currentParticipation={currentParticipation}
           currentApprovals={approvals?.length}
           endDate={endDate}
+          preciseEndDate={preciseEndDate}
           memberCount={voters.length}
           minApproval={minApproval}
           minimumReached={minimumReached}

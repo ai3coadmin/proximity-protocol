@@ -18,7 +18,6 @@ import {
   Link,
   WidgetStatus,
 } from '@aragon/ui-components';
-import {shortenAddress} from '@aragon/ui-components/src/utils/addresses';
 import {withTransaction} from '@elastic/apm-rum-react';
 import TipTapLink from '@tiptap/extension-link';
 import {useEditor} from '@tiptap/react';
@@ -60,7 +59,9 @@ import {
   decodeMultisigSettingsToAction,
   decodePluginSettingsToAction,
   decodeRemoveMembersToAction,
+  decodeSCCToAction,
   decodeWithdrawToAction,
+  shortenAddress,
   toDisplayEns,
 } from 'utils/library';
 import {NotFound} from 'utils/paths';
@@ -230,7 +231,6 @@ const Proposal: React.FC = () => {
           pluginClient?.decoding.findInterface(action.data);
 
         switch (functionParams?.functionName) {
-          case undefined:
           case 'transfer':
             return decodeWithdrawToAction(
               action.data,
@@ -274,7 +274,7 @@ const Proposal: React.FC = () => {
           case 'setMetadata':
             return decodeMetadataToAction(action.data, client);
           default:
-            return Promise.resolve({} as Action);
+            return decodeSCCToAction(action, network, t);
         }
       }
     );
@@ -301,7 +301,7 @@ const Proposal: React.FC = () => {
     Promise.all(actionPromises).then(value => {
       setDecodedActions(value);
     });
-  }, [apolloClient, client, network, pluginClient, proposal, provider]);
+  }, [apolloClient, client, network, pluginClient, proposal, provider, t]);
 
   // caches the status for breadcrumb
   useEffect(() => {

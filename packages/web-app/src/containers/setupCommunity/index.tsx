@@ -57,16 +57,16 @@ const SetupCommunityForm: React.FC = () => {
                 {...(value === 'token' ? {type: 'active'} : {})}
               />
 
-              {/*<CheckboxListItem*/}
-              {/*  label={t('createDAO.step3.multisigMembership')}*/}
-              {/*  helptext={t('createDAO.step3.multisigMembershipSubtitle')}*/}
-              {/*  onClick={() => {*/}
-              {/*    resetTokenFields();*/}
-              {/*    onChange('multisig');*/}
-              {/*  }}*/}
-              {/*  multiSelect={false}*/}
-              {/*  {...(value === 'multisig' ? {type: 'active'} : {})}*/}
-              {/*/>*/}
+              <CheckboxListItem
+                label={t('createDAO.step3.multisigMembership')}
+                helptext={t('createDAO.step3.multisigMembershipSubtitle')}
+                onClick={() => {
+                  resetTokenFields();
+                  onChange('multisig');
+                }}
+                multiSelect={false}
+                {...(value === 'multisig' ? {type: 'active'} : {})}
+              />
 
               {/* Address List Dao has been disabled */}
               {/* <CheckboxListItem

@@ -29,6 +29,7 @@ import {
   addApprovalToMultisigToProposal,
   addVoteToProposal,
   augmentProposalWithCachedExecution,
+  isMultisigProposal,
 } from 'utils/proposals';
 import {
   DetailedProposal,
@@ -75,7 +76,11 @@ export function useProposals(
   );
 
   const isMultisigPlugin = type === 'multisig.plugin.dao.eth';
-  const isTokenBasedPlugin = type === 'token-voting.plugin.dao.eth';
+  const isTokenBasedPlugin = [
+    'token-voting.plugin.dao.eth',
+    'capitaldaomumbai.plugin.dao.eth',
+    'veto.plugin.dao.eth',
+  ].includes(type || '');
 
   // return cache keys and variables based on the type of plugin;
   const getCachedProposalData = useCallback(() => {
@@ -202,7 +207,7 @@ export function useProposals(
           setIsLoadingMore(true);
         }
 
-        const proposals = await client?.methods.getProposals({
+        const response = await client?.methods.getProposals({
           daoAddressOrEns: daoAddress,
           status,
           limit,
@@ -211,6 +216,31 @@ export function useProposals(
           direction: SortDirection.DESC,
         });
 
+        /**
+         * NOTE: This needs to be removed once the SDK has taken cared
+         * of prioritizing the active state over the successful one
+         * when the end date has not yet been reached
+         */
+        const proposals = response?.map(proposal => {
+          if (proposal.status === ProposalStatus.SUCCEEDED) {
+            // prioritize active state over succeeded one if end time has yet
+            // to be met
+            if (proposal.endDate.getTime() > Date.now())
+              return {...proposal, status: ProposalStatus.ACTIVE};
+
+            // for a multisig, make sure a vote has actually been cast
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            if (isMultisigProposal(proposal) && proposal.approvals.length === 0)
+              return {...proposal, status: ProposalStatus.DEFEATED};
+          }
+
+          return proposal;
+        });
+        /*************************************************************/
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         setData([...augmentProposalsWithCache(proposals || [])]);
       } catch (err) {
         console.error(err);

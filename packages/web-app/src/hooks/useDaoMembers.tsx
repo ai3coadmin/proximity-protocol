@@ -53,6 +53,7 @@ export const useDaoMembers = (
   pluginType?: PluginTypes,
   searchTerm?: string
 ): HookData<DaoMembers> => {
+  console.log('pluginType', pluginType);
   const [data, setData] = useState<BalanceMember[] | MultisigMember[]>([]);
   const [rawMembers, setRawMembers] = useState<string[]>();
   const [filteredData, setFilteredData] = useState<
@@ -64,7 +65,11 @@ export const useDaoMembers = (
   const {network} = useNetwork();
   const provider = useSpecificProvider(CHAIN_METADATA[network].id);
 
-  const isTokenBased = pluginType === 'token-voting.plugin.dao.eth';
+  const isTokenBased = [
+    'token-voting.plugin.dao.eth',
+    'capitaldaomumbai.plugin.dao.eth',
+    'veto.plugin.dao.eth',
+  ].includes(pluginType || '');
   const {data: daoToken} = useDaoToken(pluginAddress);
 
   const client = usePluginClient(pluginType);

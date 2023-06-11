@@ -8,26 +8,24 @@ export const QueryDaos = gql`
     $sortBy: Dao_orderBy!
     $address: String!
   ) {
-    daos(
-      first: $limit
-      skip: $skip
-      orderDirection: $direction
-      orderBy: $sortBy
-      where: {plugins_: {id: $address}}
-    ) {
-      id
-      subdomain
-      metadata
-      plugins {
-        id
-        installations {
-          appliedVersion {
-            build
-            pluginRepo {
-              subdomain
-            }
-            release {
-              release
+    pluginRepo(id: $address) {
+      installations(first: $limit, skip: $skip, orderDirection: $direction) {
+        dao {
+          id
+          subdomain
+          metadata
+          plugins {
+            id
+            installations {
+              appliedVersion {
+                build
+                pluginRepo {
+                  subdomain
+                }
+                release {
+                  release
+                }
+              }
             }
           }
         }

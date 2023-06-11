@@ -450,16 +450,22 @@ const ProposeSettingWrapper: React.FC<Props> = ({
         const ipfsUri = await pluginClient?.methods.pinMetadata(metadata);
 
         // getting dates
-        let startDateTime =
-          startSwitch === 'now'
-            ? new Date(
-                `${getCanonicalDate()}T${getCanonicalTime({
-                  minutes: 10,
-                })}:00${getCanonicalUtcOffset()}`
-              )
-            : new Date(
-                `${startDate}T${startTime}:00${getCanonicalUtcOffset(startUtc)}`
-              );
+        let startDateTime: Date;
+        const startMinutesDelay = isMultisigVotingSettings(pluginSettings)
+          ? 0
+          : 10;
+
+        if (startSwitch === 'now') {
+          startDateTime = new Date(
+            `${getCanonicalDate()}T${getCanonicalTime({
+              minutes: startMinutesDelay,
+            })}:00${getCanonicalUtcOffset()}`
+          );
+        } else {
+          startDateTime = new Date(
+            `${startDate}T${startTime}:00${getCanonicalUtcOffset(startUtc)}`
+          );
+        }
 
         // End date
         let endDateTime;
@@ -482,12 +488,14 @@ const ProposeSettingWrapper: React.FC<Props> = ({
         }
 
         if (startSwitch === 'now') {
-          endDateTime = new Date(endDateTime.getTime() + minutesToMills(10));
+          endDateTime = new Date(
+            endDateTime.getTime() + minutesToMills(startMinutesDelay)
+          );
         } else {
           if (startDateTime.valueOf() < new Date().valueOf()) {
             startDateTime = new Date(
               `${getCanonicalDate()}T${getCanonicalTime({
-                minutes: 10,
+                minutes: startMinutesDelay,
               })}:00${getCanonicalUtcOffset()}`
             );
           }
@@ -509,11 +517,23 @@ const ProposeSettingWrapper: React.FC<Props> = ({
             endDateTime = new Date(endMills);
           }
         }
+
+        /**
+         * For multisig proposals, in case "now" as start time is selected, we want
+         * to keep startDate undefined, so it's automatically evaluated.
+         * If we just provide "Date.now()", than after user still goes through the flow
+         * it's going to be date from the past. And SC-call evaluation will fail.
+         */
+        const finalStartDate =
+          startSwitch === 'now' && isMultisigVotingSettings(pluginSettings)
+            ? undefined
+            : startDateTime;
+
         // Ignore encoding if the proposal had no actions
         return {
           pluginAddress,
           metadataUri: ipfsUri || '',
-          startDate: startDateTime,
+          startDate: finalStartDate,
           endDate: endDateTime,
           actions,
         };
@@ -537,6 +557,7 @@ const ProposeSettingWrapper: React.FC<Props> = ({
     minMinutes,
     pluginAddress,
     pluginClient,
+    pluginSettings,
     showTxModal,
   ]);
 
@@ -660,7 +681,10 @@ const ProposeSettingWrapper: React.FC<Props> = ({
         daoAddress: daoDetails?.address,
         daoName: daoDetails?.metadata.name,
         proposalGuid,
-        proposalParams: proposalCreationData,
+        proposalParams: {
+          ...proposalCreationData,
+          startDate: proposalCreationData.startDate || new Date(), // important to fallback to avoid passing undefined
+        },
         metadata: {
           title,
           summary,

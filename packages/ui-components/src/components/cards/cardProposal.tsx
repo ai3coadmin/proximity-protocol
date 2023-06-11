@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {Address, shortenAddress} from '../../utils/addresses';
+import {shortenAddress} from '../../utils/addresses';
 import {AlertInline} from '../alerts';
 import {AvatarDao} from '../avatar';
 import {IconClock} from '../icons';
@@ -48,6 +48,8 @@ export type CardProposalProps = {
   voteProgress?: number | string;
   /** Vote label that appears at bottom of the progress bar */
   voteLabel?: string;
+  /** Label indicating that current user has voted */
+  votedAlertLabel?: string;
   /** Breakdown of the wining option */
   winningOptionValue?: string;
   /** Proposal token amount */
@@ -58,7 +60,7 @@ export type CardProposalProps = {
   publishLabel: string;
   /** Publisher's ethereum address, ENS name **or** DAO address when type is
    * explore */
-  publisherAddress?: Address;
+  publisherAddress?: string;
   /** DAO name to display when type is explore */
   daoName?: string;
   /** Blockchain explorer URL */
@@ -78,6 +80,7 @@ export const CardProposal: React.FC<CardProposalProps> = ({
   voteTitle,
   voteProgress,
   voteLabel,
+  votedAlertLabel,
   tokenAmount,
   tokenSymbol,
   winningOptionValue,
@@ -124,21 +127,28 @@ export const CardProposal: React.FC<CardProposalProps> = ({
         </Publisher>
       </TextContent>
       {process === 'active' && voteProgress !== undefined && (
-        <LoadingContent>
-          <ProgressInfoWrapper>
-            <ProgressTitle>{voteTitle}</ProgressTitle>
-            <Amount>
-              {tokenAmount && tokenSymbol
-                ? `${tokenAmount} ${tokenSymbol}`
-                : winningOptionValue}
-            </Amount>
-          </ProgressInfoWrapper>
-          <LinearProgress max={100} value={voteProgress} />
-          <ProgressInfoWrapper>
-            <Vote>{voteLabel}</Vote>
-            <Percentage>{voteProgress}%</Percentage>
-          </ProgressInfoWrapper>
-        </LoadingContent>
+        <>
+          <LoadingContent>
+            <ProgressInfoWrapper>
+              <ProgressTitle>{voteTitle}</ProgressTitle>
+              <Amount>
+                {tokenAmount && tokenSymbol
+                  ? `${tokenAmount} ${tokenSymbol}`
+                  : winningOptionValue}
+              </Amount>
+            </ProgressInfoWrapper>
+            <LinearProgress max={100} value={voteProgress} />
+            <ProgressInfoWrapper>
+              <Vote>{voteLabel}</Vote>
+              <Percentage>{voteProgress}%</Percentage>
+            </ProgressInfoWrapper>
+          </LoadingContent>
+          {votedAlertLabel && (
+            <VotedAlertWrapper>
+              <AlertInline mode="success" label={votedAlertLabel} />
+            </VotedAlertWrapper>
+          )}
+        </>
       )}
     </Card>
   );
@@ -257,3 +267,7 @@ const Percentage = styled.span.attrs({
 })``;
 
 const PublisherLabel = styled.p.attrs({className: '-mr-0.5'})``;
+
+const VotedAlertWrapper = styled.div.attrs({
+  className: 'flex justify-center desktop:justify-start',
+})``;

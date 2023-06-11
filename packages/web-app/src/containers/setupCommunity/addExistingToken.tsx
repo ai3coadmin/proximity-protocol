@@ -72,7 +72,7 @@ const AddExistingToken: React.FC = () => {
             provider,
             nativeCurrency
           );
-
+          console.log('res', res);
           setValue('tokenName', res.name);
           setValue('tokenSymbol', res.symbol);
           setValue(

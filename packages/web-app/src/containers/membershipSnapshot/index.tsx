@@ -4,7 +4,7 @@ import {
   IconCommunity,
   ListItemHeader,
 } from '@aragon/ui-components';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 import {generatePath, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
@@ -18,8 +18,9 @@ import useScreen from 'hooks/useScreen';
 import {
   Community,
   ManageMembersProposal,
-  MintTokensProposal,
+  MintTokensProposal, NotFound
 } from 'utils/paths';
+import {useClient} from '../../hooks/useClient';
 
 type Props = {
   daoAddressOrEns: string;
@@ -43,6 +44,40 @@ export const MembershipSnapshot: React.FC<Props> = ({
     data: {members, daoToken},
     isLoading,
   } = useDaoMembers(pluginAddress, pluginType);
+  const {context} = useClient();
+
+  useEffect(() => {
+    console.log('pluginAddress', daoAddressOrEns, members, isLoading);
+    if (context?.signer) {
+      context?.signer?.getAddress().then(address => {
+        if (
+          daoAddressOrEns.toLowerCase() ===
+          import.meta.env?.VITE_GOVERNANCE_ADDRESS_MUMBAI?.toLowerCase() &&
+          members.find(a => a.address.toLowerCase() === address.toLowerCase())
+        ) {
+          return;
+        }
+        if(!isLoading) {
+          // TODO: BA Uncomment when going live
+          // navigate(NotFound, {
+          //   replace: true,
+          //   state: {incorrectDao: ''},
+          // });
+        }
+      });
+    } else {
+      console.log('YAY', import.meta.env.VITE_GOVERNANCE_ADDRESS_MUMBAI);
+      if (
+        daoAddressOrEns.toLowerCase() ===
+        import.meta.env.VITE_GOVERNANCE_ADDRESS_MUMBAI?.toLowerCase()
+      ) {
+        console.log('YAY YAYAY');
+        navigate(NotFound, {
+          replace: true,
+        });
+      }
+    }
+  }, [context?.signer, isLoading, members, navigate, daoAddressOrEns]);
   const totalMemberCount = members.length;
 
   const walletBased = pluginType === 'multisig.plugin.dao.eth';

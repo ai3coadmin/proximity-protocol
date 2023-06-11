@@ -5,7 +5,6 @@ import {
   TransferSortBy,
   TransferType,
 } from '@aragon/sdk-client';
-import {Address} from '@aragon/ui-components/dist/utils/addresses';
 import {useEffect, useMemo, useState} from 'react';
 
 import {pendingDeposits} from 'context/apolloClient';
@@ -46,7 +45,7 @@ function sortByCreatedAt(a: Transfer, b: Transfer): number {
  */
 
 export const useDaoTransfers = (
-  daoAddressOrEns: Address
+  daoAddressOrEns: string
 ): HookData<Transfer[]> => {
   const {client} = useClient();
   const {network} = useNetwork();
@@ -103,7 +102,7 @@ export const useDaoTransfers = (
 
         // filter the erc20 token deposits
         const erc20DepositsListPromises =
-          alchemyTransfersList.result.transfers.map(
+          alchemyTransfersList?.result?.transfers?.map(
             async ({from, rawContract, metadata, hash}: AlchemyTransfer) => {
               const {name, symbol, decimals} = await getTokenInfo(
                 rawContract.address,
