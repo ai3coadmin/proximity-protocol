@@ -45,6 +45,8 @@ export class VetoClientEstimation
 
     const tokenVotingContract = VetoPlugin__factory.connect(
       params.pluginAddress,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       signer
     );
 

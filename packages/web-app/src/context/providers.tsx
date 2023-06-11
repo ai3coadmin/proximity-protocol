@@ -77,11 +77,12 @@ function getInfuraProvider(network: SupportedNetworks) {
   // library, there's no reason why passing the chainId wouldn't work. Also,
   // I've tried it on a fresh project and had no problems there...
   // [VR 07-03-2022]
-  if (network === 'arbitrum') {
-    return new InfuraProvider(NW_ARB, infuraApiKey);
-  } else if (network === 'arbitrum-test') {
-    return new InfuraProvider(NW_ARB_GOERLI, infuraApiKey);
-  } else if (network === 'mumbai' || network === 'polygon') {
+  // if (network === 'arbitrum') {
+  //   return new InfuraProvider(NW_ARB, infuraApiKey);
+  // } else if (network === 'arbitrum-test') {
+  //   return new InfuraProvider(NW_ARB_GOERLI, infuraApiKey);
+  // } else
+  if (network === 'mumbai' || network === 'polygon') {
     return new JsonRpcProvider(CHAIN_METADATA[network].rpc[0], {
       chainId: CHAIN_METADATA[network].id,
       name: translateToNetworkishName(network),

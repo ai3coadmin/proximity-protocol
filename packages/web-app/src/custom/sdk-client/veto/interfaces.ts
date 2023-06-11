@@ -25,6 +25,7 @@ import {
   VotingSettings,
   IDaoQueryParams,
   DaoListItem,
+  ITokenVotingPluginInstall,
 } from '@aragon/sdk-client';
 import {TokenType} from '@aragon/sdk-client';
 
@@ -96,7 +97,7 @@ export interface IVetoClient {
 
 export type IVetoPluginInstall = {
   votingSettings: VotingSettings;
-  useToken?: ExistingTokenParams;
+  useToken?: ITokenVotingPluginInstall['useToken'];
 };
 
 type ExistingTokenParams = {

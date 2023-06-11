@@ -33,12 +33,13 @@ const DEFAULT_QUERY_PARAMS = {
  * @param options query parameters for fetching the DAOs
  * @returns list of DAOs based on given params
  */
-async function fetchDaos(client: Client | undefined, options: IDaoQueryParams) {
+async function fetchDaos(
+  client: VetoClient | undefined,
+  options: IDaoQueryParams
+) {
   return client
     ? client.methods.getDaos({
         ...options,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         address: import.meta.env.VITE_VETO_PLUGIN_ADDRESS || '',
       })
     : Promise.reject(new Error('Client not defined'));
@@ -64,7 +65,7 @@ export const useDaosInfiniteQuery = (
   }: Partial<Pick<IDaoQueryParams, 'direction' | 'limit' | 'sortBy'>> = {}
 ) => {
   const {client, network: clientNetwork} = useClient();
-  const pluginClient = usePluginClient('token-voting.plugin.dao.eth');
+  const pluginClient = usePluginClient('veto.plugin.dao.eth');
 
   return useInfiniteQuery({
     // notice the use of `clientNetwork` instead of `network` from network context
@@ -75,7 +76,7 @@ export const useDaosInfiniteQuery = (
 
     queryFn: ({pageParam = 0}) => {
       const skip = limit * pageParam;
-      return fetchDaos(client, {skip, limit, direction, sortBy});
+      return fetchDaos(pluginClient, {skip, limit, direction, sortBy});
     },
 
     // calculate next page value

@@ -229,6 +229,8 @@ export function useProposals(
               return {...proposal, status: ProposalStatus.ACTIVE};
 
             // for a multisig, make sure a vote has actually been cast
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             if (isMultisigProposal(proposal) && proposal.approvals.length === 0)
               return {...proposal, status: ProposalStatus.DEFEATED};
           }
@@ -237,6 +239,8 @@ export function useProposals(
         });
         /*************************************************************/
 
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         setData([...augmentProposalsWithCache(proposals || [])]);
       } catch (err) {
         console.error(err);

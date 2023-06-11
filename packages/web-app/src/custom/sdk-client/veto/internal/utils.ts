@@ -198,7 +198,7 @@ export function tokenVotingInitParamsToContract(
   //   ];
   // } else
   if (params.useToken) {
-    token = params.useToken?.address;
+    token = params.useToken?.tokenAddress;
   }
   return [
     token,

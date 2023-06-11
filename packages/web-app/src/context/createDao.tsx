@@ -215,7 +215,8 @@ const CreateDaoProvider: React.FC = ({children}) => {
     useCallback((): ITokenVotingPluginInstall['useToken'] => {
       const {tokenAddress, tokenName, tokenSymbol, wallets} = getValues();
       return {
-        address: tokenAddress,
+        tokenAddress,
+        wrappedToken: {name: tokenName, symbol: tokenSymbol},
         // name: tokenName,
         // symbol: tokenSymbol,
         // decimals: 18,
