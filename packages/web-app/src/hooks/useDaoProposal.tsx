@@ -74,7 +74,7 @@ export const useDaoProposal = (
   // return cache keys and variables based on the type of plugin;
   const getCachedProposalData = useCallback(
     (proposalGuid: string) => {
-      if (pluginType === 'multisig.plugin.dao.eth') {
+      if (pluginType?.includes('multisig')) {
         return {
           proposalCacheKey: PENDING_MULTISIG_PROPOSALS_KEY,
           proposalCacheVar: pendingMultisigProposalsVar,

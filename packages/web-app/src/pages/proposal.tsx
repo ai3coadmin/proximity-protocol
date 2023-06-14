@@ -1,7 +1,6 @@
 import {useApolloClient} from '@apollo/client';
 import {
   DaoAction,
-  MultisigClient,
   MultisigProposal,
   ProposalStatus,
   TokenVotingClient,
@@ -64,7 +63,7 @@ import {
   shortenAddress,
   toDisplayEns,
 } from 'utils/library';
-import {NotFound} from 'utils/paths';
+import {CancelVote, NotFound} from 'utils/paths';
 import {
   getLiveProposalTerminalProps,
   getProposalExecutionStatus,
@@ -77,6 +76,7 @@ import {
   stripPlgnAdrFromProposalId,
 } from 'utils/proposals';
 import {Action, ProposalId} from 'utils/types';
+import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 
 // TODO: @Sepehr Please assign proper tags on action decoding
 // const PROPOSAL_TAGS = ['Finance', 'Withdraw'];
@@ -112,8 +112,9 @@ const Proposal: React.FC = () => {
     daoDetails?.plugins[0].id as PluginTypes
   );
 
-  const multisigDAO =
-    (daoDetails?.plugins[0].id as PluginTypes) === 'multisig.plugin.dao.eth';
+  const multisigDAO = (daoDetails?.plugins[0].id as PluginTypes)?.includes(
+    'multisig'
+  );
 
   const allowVoteReplacement =
     isTokenVotingSettings(daoSettings) &&
@@ -224,6 +225,8 @@ const Proposal: React.FC = () => {
       ? proposal.token
       : undefined;
 
+    console.log('proposal.actions', proposal.actions);
+
     const actionPromises: Promise<Action | undefined>[] = proposal.actions.map(
       (action: DaoAction, index) => {
         const functionParams =
@@ -250,12 +253,12 @@ const Proposal: React.FC = () => {
           case 'addAddresses':
             return decodeAddMembersToAction(
               action.data,
-              pluginClient as MultisigClient
+              pluginClient as VetoMultisigClient
             );
           case 'removeAddresses':
             return decodeRemoveMembersToAction(
               action.data,
-              pluginClient as MultisigClient
+              pluginClient as VetoMultisigClient
             );
           case 'updateVotingSettings':
             return decodePluginSettingsToAction(
@@ -268,7 +271,7 @@ const Proposal: React.FC = () => {
             return Promise.resolve(
               decodeMultisigSettingsToAction(
                 action.data,
-                pluginClient as MultisigClient
+                pluginClient as VetoMultisigClient
               )
             );
           case 'setMetadata':
@@ -642,6 +645,26 @@ const Proposal: React.FC = () => {
               />
             </>
           )}
+
+          {/*<ButtonWrapper>*/}
+          {proposal.dao.address !== import.meta.env.VITE_GOVERNANCE_ADDRESS &&
+            dao === import.meta.env.VITE_GOVERNANCE_ADDRESS && (
+              <ButtonText
+                label={t('governance.proposals.buttons.cancelProposal')}
+                size="large"
+                // disabled={!selectedVote}
+                onClick={() => {
+                  navigate(
+                    generatePath(CancelVote, {
+                      network,
+                      dao: dao,
+                      id: proposalId!.toUrlSlug(), // only called for Withdrawals
+                    })
+                  );
+                }}
+              />
+            )}
+          {/*</ButtonWrapper>*/}
 
           <VotingTerminal
             status={proposal.status}

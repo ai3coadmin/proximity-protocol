@@ -44,6 +44,7 @@ import {
 import {useNetwork} from './network';
 import {usePrivacyContext} from './privacyContext';
 import {useProviders} from './providers';
+import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 
 //TODO: currently a context, but considering there might only ever be one child,
 // might need to turn it into a wrapper that passes props to proposal page
@@ -164,7 +165,7 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
         });
       }
 
-      return (pluginClient as MultisigClient)?.estimation.approveProposal({
+      return (pluginClient as VetoMultisigClient)?.estimation.approveProposal({
         proposalId: voteParams.proposalId,
         tryExecution: false,
       });
@@ -185,7 +186,7 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
           executeProposalId.export()
         );
       }
-      return (pluginClient as MultisigClient)?.estimation.executeProposal(
+      return (pluginClient as VetoMultisigClient)?.estimation.executeProposal(
         executeProposalId.export()
       );
     }
@@ -236,7 +237,7 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
       );
 
       // cache multisig vote
-      if (pluginType === 'multisig.plugin.dao.eth') {
+      if (pluginType?.includes('multisig')) {
         newCache = {
           ...cachedMultisigApprovals,
           [cachedProposalId]: address,
@@ -320,7 +321,7 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
       }
 
       // cache multisig execution
-      if (pluginType === 'multisig.plugin.dao.eth') {
+      if (pluginType?.includes('multisig')) {
         newCache = {
           ...cachedMultisigExecution,
           [cachedProposalId]: true,
@@ -369,10 +370,12 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
     let voteSteps;
 
     if (!tokenAddress) {
-      voteSteps = (pluginClient as MultisigClient)?.methods.approveProposal({
-        proposalId: voteParams.proposalId,
-        tryExecution: false,
-      });
+      voteSteps = (pluginClient as VetoMultisigClient)?.methods.approveProposal(
+        {
+          proposalId: voteParams.proposalId,
+          tryExecution: false,
+        }
+      );
     } else {
       voteSteps = (pluginClient as TokenVotingClient)?.methods.voteProposal({
         ...voteParams,
@@ -463,9 +466,9 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
         pluginClient as TokenVotingClient
       )?.methods.executeProposal(executeProposalId.export());
     } else {
-      executeSteps = (pluginClient as MultisigClient)?.methods.executeProposal(
-        executeProposalId.export()
-      );
+      executeSteps = (
+        pluginClient as VetoMultisigClient
+      )?.methods.executeProposal(executeProposalId.export());
     }
 
     if (!executeSteps) {

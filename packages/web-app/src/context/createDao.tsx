@@ -37,6 +37,7 @@ import {Dashboard} from 'utils/paths';
 import {useGlobalModalContext} from './globalModals';
 import {useNetwork} from './network';
 import {VetoClient} from '../custom/sdk-client/veto';
+import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 
 type CreateDaoContextType = {
   /** Prepares the creation data and awaits user confirmation to start process */
@@ -236,7 +237,7 @@ const CreateDaoProvider: React.FC = ({children}) => {
     switch (membership) {
       case 'multisig': {
         const [params, network] = getMultisigPluginInstallParams();
-        const multisigPlugin = MultisigClient.encoding.getPluginInstallItem(
+        const multisigPlugin = VetoMultisigClient.encoding.getPluginInstallItem(
           params,
           network
         );
@@ -300,6 +301,7 @@ const CreateDaoProvider: React.FC = ({children}) => {
 
   // estimate creation fees
   const estimateCreationFees = useCallback(async () => {
+    console.log('daoCreationData estimate', daoCreationData);
     if (daoCreationData) return client?.estimation.createDao(daoCreationData);
   }, [client?.estimation, daoCreationData]);
 

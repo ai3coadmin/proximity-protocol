@@ -291,7 +291,8 @@
         "execute": "Execute now",
         "edit": "Edit proposal",
         "readFullProposal": "Read full proposal",
-        "closeFullProposal": "Close full proposal"
+        "closeFullProposal": "Close full proposal",
+        "cancelProposal": "Cancel proposal"
       },
       "alert": {
         "voted": "You have already voted."
@@ -777,6 +778,10 @@
     "manageWallets": {
       "title": "Add or remove wallets",
       "description": "Authorized wallets can create proposals, propose to move funds in and out of the treasury, and vote in your DAO"
+    },
+    "cancelVote": {
+      "title": "Cancel Proposal",
+      "description": "Cancel Proposal"
     }
   },
   "votingTerminal": {

@@ -260,10 +260,11 @@ const Dashboard: React.FC = () => {
   }
 
   if (liveDao && liveAddressOrEns) {
-    const daoType =
-      (liveDao?.plugins[0]?.id as PluginTypes) === 'multisig.plugin.dao.eth'
-        ? t('explore.explorer.walletBased')
-        : t('explore.explorer.tokenBased');
+    const daoType = (liveDao?.plugins[0]?.id as PluginTypes)?.includes(
+      'multisig'
+    )
+      ? t('explore.explorer.walletBased')
+      : t('explore.explorer.tokenBased');
 
     return (
       <>

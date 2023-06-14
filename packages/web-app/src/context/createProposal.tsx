@@ -73,6 +73,7 @@ import {usePrivacyContext} from './privacyContext';
 import {useProviders} from './providers';
 import {isAddress} from 'ethers/lib/utils';
 import {VetoClient} from '../custom/sdk-client/veto';
+import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 
 type Props = {
   showTxModal: boolean;
@@ -185,7 +186,7 @@ const CreateProposalProvider: React.FC<Props> = ({
           );
           actions.push(
             Promise.resolve(
-              (pluginClient as MultisigClient).encoding.addAddressesAction({
+              (pluginClient as VetoMultisigClient).encoding.addAddressesAction({
                 pluginAddress: pluginAddress,
                 members: wallets,
               })
@@ -200,12 +201,12 @@ const CreateProposalProvider: React.FC<Props> = ({
           if (wallets.length > 0)
             actions.push(
               Promise.resolve(
-                (pluginClient as MultisigClient).encoding.removeAddressesAction(
-                  {
-                    pluginAddress: pluginAddress,
-                    members: wallets,
-                  }
-                )
+                (
+                  pluginClient as VetoMultisigClient
+                ).encoding.removeAddressesAction({
+                  pluginAddress: pluginAddress,
+                  members: wallets,
+                })
               )
             );
           break;
@@ -214,7 +215,7 @@ const CreateProposalProvider: React.FC<Props> = ({
           actions.push(
             Promise.resolve(
               (
-                pluginClient as MultisigClient
+                pluginClient as VetoMultisigClient
               ).encoding.updateMultisigVotingSettings({
                 pluginAddress: pluginAddress,
                 votingSettings: {

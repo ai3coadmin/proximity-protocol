@@ -109,7 +109,7 @@ export class VetoClientMethods
     skip = 0,
     direction = SortDirection.ASC,
     sortBy = DaoSortBy.CREATED_AT,
-    address = '',
+    address = [],
   }: IVetoDaoQueryParams): Promise<DaoListItem[]> {
     const query = QueryDaos;
     const params = {
@@ -121,15 +121,21 @@ export class VetoClientMethods
     };
     const name = 'DAOs';
     type T = {
-      pluginRepo: {
+      pluginRepos: {
         installations: {
           dao: SubgraphDaoListItem;
         }[];
-      };
+      }[];
     };
-    const {pluginRepo} = await this.graphql.request<T>({query, params, name});
+    const {pluginRepos} = await this.graphql.request<T>({query, params, name});
+    const pluginRepo: SubgraphDaoListItem[] = [];
+    pluginRepos.forEach(p =>
+      p.installations.forEach(({dao}) => {
+        pluginRepo.push(dao);
+      })
+    );
     return Promise.all(
-      pluginRepo.installations.map(async ({dao}): Promise<DaoListItem> => {
+      pluginRepo.map(async (dao): Promise<DaoListItem> => {
         if (!dao.metadata) {
           return toDaoListItem(dao, EMPTY_DAO_METADATA_LINK);
         }

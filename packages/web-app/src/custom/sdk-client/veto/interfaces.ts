@@ -31,7 +31,7 @@ import {TokenType} from '@aragon/sdk-client';
 
 // Veto
 export interface IVetoDaoQueryParams extends IDaoQueryParams {
-  address?: string;
+  address?: string[];
 }
 export interface IVetoClientMethods extends IClientCore {
   createProposal: (

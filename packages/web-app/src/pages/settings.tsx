@@ -139,6 +139,7 @@ export const PluginSettingsWrapper: React.FC<IPluginSettings> = ({
       return <MajorityVotingSettings daoDetails={daoDetails} />;
 
     case 'multisig.plugin.dao.eth':
+    case 'veto-multisig-v1.plugin.dao.eth':
       return <MultisigSettings daoDetails={daoDetails} />;
 
     default:

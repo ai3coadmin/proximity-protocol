@@ -40,7 +40,10 @@ async function fetchDaos(
   return client
     ? client.methods.getDaos({
         ...options,
-        address: import.meta.env.VITE_VETO_PLUGIN_ADDRESS || '',
+        address: [
+          import.meta.env.VITE_VETO_PLUGIN_ADDRESS || '',
+          import.meta.env.VITE_VETO_MULTISIG_PLUGIN_REPO_ADDRESS || '',
+        ],
       })
     : Promise.reject(new Error('Client not defined'));
 }

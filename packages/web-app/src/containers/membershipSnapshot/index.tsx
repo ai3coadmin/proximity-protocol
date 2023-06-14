@@ -18,7 +18,8 @@ import useScreen from 'hooks/useScreen';
 import {
   Community,
   ManageMembersProposal,
-  MintTokensProposal, NotFound
+  MintTokensProposal,
+  NotFound,
 } from 'utils/paths';
 import {useClient} from '../../hooks/useClient';
 
@@ -52,12 +53,12 @@ export const MembershipSnapshot: React.FC<Props> = ({
       context?.signer?.getAddress().then(address => {
         if (
           daoAddressOrEns.toLowerCase() ===
-          import.meta.env?.VITE_GOVERNANCE_ADDRESS_MUMBAI?.toLowerCase() &&
+            import.meta.env?.VITE_GOVERNANCE_ADDRESS_MUMBAI?.toLowerCase() &&
           members.find(a => a.address.toLowerCase() === address.toLowerCase())
         ) {
           return;
         }
-        if(!isLoading) {
+        if (!isLoading) {
           // TODO: BA Uncomment when going live
           // navigate(NotFound, {
           //   replace: true,
@@ -80,7 +81,7 @@ export const MembershipSnapshot: React.FC<Props> = ({
   }, [context?.signer, isLoading, members, navigate, daoAddressOrEns]);
   const totalMemberCount = members.length;
 
-  const walletBased = pluginType === 'multisig.plugin.dao.eth';
+  const walletBased = pluginType?.includes('multisig');
 
   const headerButtonHandler = () => {
     walletBased

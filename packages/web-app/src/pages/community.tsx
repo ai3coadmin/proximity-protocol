@@ -46,8 +46,9 @@ const Community: React.FC = () => {
   const filteredMemberCount = filteredMembers.length;
   const displayedMembers = filteredMemberCount > 0 ? filteredMembers : members;
 
-  const walletBased =
-    (daoDetails?.plugins[0].id as PluginTypes) === 'multisig.plugin.dao.eth';
+  const walletBased = (daoDetails?.plugins[0].id as PluginTypes)?.includes(
+    'multisig'
+  );
 
   /*************************************************
    *                    Handlers                   *
