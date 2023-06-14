@@ -5,7 +5,7 @@ import {useDaoQuery} from './useDaoDetails';
 
 export function useDaoActions(dao: string): HookData<ActionParameter[]> {
   const {data: daoDetails, error, isLoading} = useDaoQuery(dao);
-  const multisig = daoDetails?.plugins[0].id === 'multisig.plugin.dao.eth';
+  const multisig = daoDetails?.plugins[0].id?.includes('multisig');
 
   const {t} = useTranslation();
 

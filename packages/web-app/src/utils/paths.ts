@@ -23,3 +23,4 @@ export const NewProposal = '/daos/:network/:dao/governance/new-proposal';
 export const MintTokensProposal = '/daos/:network/:dao/community/mint-tokens';
 export const ManageMembersProposal =
   '/daos/:network/:dao/community/manage-members';
+export const CancelVote = '/daos/:network/:dao/governance/proposals/:id/cancel';

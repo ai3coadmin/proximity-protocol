@@ -7,6 +7,7 @@ import {
 
 import {HookData, ProposalId} from 'utils/types';
 import {PluginTypes, usePluginClient} from './usePluginClient';
+import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 
 /**
  * Check whether wallet is eligible to vote on proposal
@@ -29,7 +30,7 @@ export const useWalletCanVote = (
   const [error, setError] = useState<Error>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const isMultisigClient = pluginType === 'multisig.plugin.dao.eth';
+  const isMultisigClient = pluginType?.includes('multisig');
   const isTokenVotingClient = [
     'token-voting.plugin.dao.eth',
     'capitaldaomumbai.plugin.dao.eth',
@@ -51,7 +52,7 @@ export const useWalletCanVote = (
 
         if (isMultisigClient) {
           canVote = [
-            await (client as MultisigClient)?.methods.canApprove({
+            await (client as VetoMultisigClient)?.methods.canApprove({
               proposalId: proposalId.export(),
               approverAddressOrEns: address,
             }),

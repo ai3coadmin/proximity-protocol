@@ -6,9 +6,9 @@ export const QueryDaos = gql`
     $skip: Int!
     $direction: OrderDirection!
     $sortBy: Dao_orderBy!
-    $address: String!
+    $address: [String!]
   ) {
-    pluginRepo(id: $address) {
+    pluginRepos(where: {id_in: $address}) {
       installations(first: $limit, skip: $skip, orderDirection: $direction) {
         dao {
           id

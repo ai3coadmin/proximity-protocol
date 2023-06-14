@@ -60,6 +60,7 @@ export function useProposals(
   const [isLoading, setIsLoading] = useState(false);
 
   const client = usePluginClient(type);
+  const pClient = usePluginClient('veto-multisig-v1.plugin.dao.eth');
   const {preferences} = usePrivacyContext();
 
   const cachedMultisigVotes = useReactiveVar(pendingMultisigApprovalsVar);
@@ -75,7 +76,7 @@ export function useProposals(
     pendingTokenBasedProposalsVar
   );
 
-  const isMultisigPlugin = type === 'multisig.plugin.dao.eth';
+  const isMultisigPlugin = type?.includes('multisig');
   const isTokenBasedPlugin = [
     'token-voting.plugin.dao.eth',
     'capitaldaomumbai.plugin.dao.eth',
@@ -207,14 +208,26 @@ export function useProposals(
           setIsLoadingMore(true);
         }
 
-        const response = await client?.methods.getProposals({
-          daoAddressOrEns: daoAddress,
-          status,
-          limit,
-          skip,
-          sortBy: ProposalSortBy.CREATED_AT,
-          direction: SortDirection.DESC,
-        });
+        let response;
+        if (daoAddress === import.meta.env.VITE_GOVERNANCE_ADDRESS) {
+          response = await pClient?.methods.getAllProposals({
+            daoAddressOrEns: daoAddress,
+            status,
+            limit,
+            skip,
+            sortBy: ProposalSortBy.CREATED_AT,
+            direction: SortDirection.DESC,
+          });
+        } else {
+          response = await client?.methods.getProposals({
+            daoAddressOrEns: daoAddress,
+            status,
+            limit,
+            skip,
+            sortBy: ProposalSortBy.CREATED_AT,
+            direction: SortDirection.DESC,
+          });
+        }
 
         /**
          * NOTE: This needs to be removed once the SDK has taken cared

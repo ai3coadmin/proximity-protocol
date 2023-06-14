@@ -43,6 +43,7 @@ import {i18n} from '../../i18n.config';
 import {addABI, decodeMethod} from './abiDecoder';
 import {getTokenInfo} from './tokens';
 import {isAddress} from 'ethers/lib/utils';
+import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 
 export function formatUnits(amount: BigNumberish, decimals: number) {
   if (amount.toString().includes('.') || !decimals) {
@@ -245,7 +246,7 @@ export async function decodeMintTokensToAction(
  */
 export async function decodeAddMembersToAction(
   data: Uint8Array | undefined,
-  client: MultisigClient | undefined
+  client: VetoMultisigClient | undefined
 ): Promise<ActionAddAddress | undefined> {
   if (!client || !data) {
     console.error('SDK client is not initialized correctly');
@@ -269,12 +270,12 @@ export async function decodeAddMembersToAction(
 /**
  * decodeRemoveMembersToAction
  * @param data Uint8Array action data
- * @param client SDK MultisigClient, Fetched using usePluginClient
+ * @param client SDK VetoMultisigClient, Fetched using usePluginClient
  * @returns Return Decoded RemoveMembers action
  */
 export async function decodeRemoveMembersToAction(
   data: Uint8Array | undefined,
-  client: MultisigClient | undefined
+  client: VetoMultisigClient | undefined
 ): Promise<ActionRemoveAddress | undefined> {
   if (!client || !data) {
     console.error('SDK client is not initialized correctly');
@@ -323,7 +324,7 @@ export async function decodePluginSettingsToAction(
 
 export function decodeMultisigSettingsToAction(
   data: Uint8Array | undefined,
-  client: MultisigClient
+  client: VetoMultisigClient
 ): ActionUpdateMultisigPluginSettings | undefined {
   if (!client || !data) {
     console.error('SDK client is not initialized correctly');

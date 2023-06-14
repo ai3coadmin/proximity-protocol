@@ -104,7 +104,7 @@ const WidgetFooter: React.FC<FooterProps> = ({
       return (
         <AlertInline
           label={
-            pluginType === 'multisig.plugin.dao.eth'
+            pluginType?.includes('multisig')
               ? t('governance.executionCard.status.expired')
               : t('governance.executionCard.status.defeated')
           }

@@ -14,7 +14,7 @@ const EditSettings: React.FC = () => {
 
   if (detailsAreLoading) {
     return <Loading />;
-  } else if (daoDetails && pluginType === 'multisig.plugin.dao.eth') {
+  } else if (daoDetails && pluginType?.includes('multisig')) {
     return <EditMsSettings daoDetails={daoDetails} />;
   } else if (
     daoDetails &&

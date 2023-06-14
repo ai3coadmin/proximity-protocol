@@ -50,6 +50,7 @@ const ProposalPage = lazy(() => import('pages/proposal'));
 
 const MintTokensProposalPage = lazy(() => import('pages/mintTokens'));
 const ManageMembersProposalPage = lazy(() => import('pages/manageMembers'));
+const CancelVotePage = lazy(() => import('pages/cancelVote'));
 
 function App() {
   // TODO this needs to be inside a Routes component. Will be moved there with
@@ -124,6 +125,10 @@ function App() {
                 path="governance/proposals/:id"
                 element={<ProposalDetailsWrapper />}
               />
+              <Route
+                path="governance/proposals/:id/cancel"
+                element={<CancelVoteWrapper />}
+              />
               <Route path="community" element={<CommunityPage />} />
               <Route path="settings" element={<SettingsPage />} />
               {/* Redirects the user to the dashboard page by default if no dao-specific page is specified. */}
@@ -165,6 +170,12 @@ const NewSettingsWrapper: React.FC = () => {
 const ProposalDetailsWrapper: React.FC = () => (
   <ProposalTransactionProvider>
     <ProposalPage />
+  </ProposalTransactionProvider>
+);
+
+const CancelVoteWrapper: React.FC = () => (
+  <ProposalTransactionProvider>
+    <CancelVotePage />
   </ProposalTransactionProvider>
 );
 
