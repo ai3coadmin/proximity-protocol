@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import {GridLayout} from 'components/layout';
 import useScreen from 'hooks/useScreen';
-import IconLogoBlue from 'public/iconLogoBlue.svg';
+import IconLogoBlue from 'public/aib-logo.png';
 import {EXPLORE_NAV_LINKS, PRIVACY_NAV_LINKS} from 'utils/constants';
 import {useWallet} from 'hooks/useWallet';
 
@@ -87,7 +87,7 @@ const FlexDiv = styled.div.attrs({
 })``;
 
 const LogoContainer = styled.img.attrs({
-  className: 'h-5',
+  className: 'h-8',
 })``;
 
 const StyledNavList = styled.ul.attrs({

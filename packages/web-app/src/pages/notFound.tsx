@@ -6,7 +6,7 @@ import {useTranslation} from 'react-i18next';
 import {ButtonText} from '@aragon/ui-components';
 
 import {Container, GridLayout} from 'components/layout';
-import Logo from 'public/logoBlue.svg';
+import Logo from 'public/aib-logo.png';
 import Logo404 from 'public/illu-custom.svg';
 import Green from 'public/circleGreenGradient.svg';
 import Purple from 'public/purpleGradient.svg';
@@ -22,7 +22,7 @@ const NotFound: React.FC = () => {
         <Menu>
           <GridLayout>
             <img
-              className="col-span-2 col-start-2 tablet:col-start-4 desktop:col-start-auto mx-auto desktop:mx-0 h-4"
+              className="col-span-2 col-start-2 tablet:col-start-4 desktop:col-start-auto mx-auto desktop:mx-0 h-8"
               src={Logo}
             />
           </GridLayout>
