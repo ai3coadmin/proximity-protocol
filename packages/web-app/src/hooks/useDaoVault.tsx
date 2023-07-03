@@ -33,13 +33,14 @@ export const useDaoVault = (
   const [tokens, setTokens] = useState<VaultToken[]>([]);
 
   useEffect(() => {
+    const actualBalance = (bal: bigint, decimals: number) =>
+      Number(formatUnits(bal, decimals));
+
     if (data?.tokens?.length === 0) {
       setTokens(tokensWithMetadata as VaultToken[]);
       return;
     }
 
-    const actualBalance = (bal: bigint, decimals: number) =>
-      Number(formatUnits(bal, decimals));
     const tokenPreviousBalances = historicalTokenBalances(
       transfers,
       tokensWithMetadata,
