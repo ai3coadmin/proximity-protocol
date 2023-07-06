@@ -136,10 +136,12 @@ export const PluginSettingsWrapper: React.FC<IPluginSettings> = ({
     case 'token-voting.plugin.dao.eth':
     case 'capitaldaomumbai.plugin.dao.eth':
     case 'veto.plugin.dao.eth':
+    case 'veto-v2.plugin.dao.eth':
       return <MajorityVotingSettings daoDetails={daoDetails} />;
 
     case 'multisig.plugin.dao.eth':
     case 'veto-multisig-v1.plugin.dao.eth':
+    case 'veto-multisig-v2.plugin.dao.eth':
       return <MultisigSettings daoDetails={daoDetails} />;
 
     default:

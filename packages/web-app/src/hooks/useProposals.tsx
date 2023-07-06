@@ -60,7 +60,7 @@ export function useProposals(
   const [isLoading, setIsLoading] = useState(false);
 
   const client = usePluginClient(type);
-  const pClient = usePluginClient('veto-multisig-v1.plugin.dao.eth');
+  const pClient = usePluginClient('veto-multisig-v2.plugin.dao.eth');
   const {preferences} = usePrivacyContext();
 
   const cachedMultisigVotes = useReactiveVar(pendingMultisigApprovalsVar);
@@ -81,6 +81,7 @@ export function useProposals(
     'token-voting.plugin.dao.eth',
     'capitaldaomumbai.plugin.dao.eth',
     'veto.plugin.dao.eth',
+    'veto-v2.plugin.dao.eth',
   ].includes(type || '');
 
   // return cache keys and variables based on the type of plugin;
