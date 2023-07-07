@@ -252,6 +252,7 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
           'token-voting.plugin.dao.eth',
           'capitaldaomumbai.plugin.dao.eth',
           'veto.plugin.dao.eth',
+          'veto-v2.plugin.dao.eth',
         ].includes(pluginType || '') &&
         tokenAddress
       ) {
@@ -310,6 +311,7 @@ const ProposalTransactionProvider: React.FC<Props> = ({children}) => {
           'token-voting.plugin.dao.eth',
           'capitaldaomumbai.plugin.dao.eth',
           'veto.plugin.dao.eth',
+          'veto-v2.plugin.dao.eth',
         ].includes(pluginType || '')
       ) {
         newCache = {

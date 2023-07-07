@@ -127,6 +127,7 @@ const ProtectedRoute: React.FC = () => {
           'token-voting.plugin.dao.eth',
           'capitaldaomumbai.plugin.dao.eth',
           'veto.plugin.dao.eth',
+          'veto-v2.plugin.dao.eth',
         ].includes(pluginType || '')
       ) {
         gateTokenBasedProposal();

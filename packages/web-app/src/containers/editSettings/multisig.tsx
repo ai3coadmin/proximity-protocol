@@ -177,6 +177,7 @@ export const EditMsSettings: React.FC<EditMsSettingsProps> = ({daoDetails}) => {
         'token-voting.plugin.dao.eth',
         'capitaldaomumbai.plugin.dao.eth',
         'veto.plugin.dao.eth',
+        'veto-v2.plugin.dao.eth',
       ].includes(daoDetails?.plugins[0].id || '')
         ? 'token'
         : 'multisig'
