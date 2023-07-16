@@ -854,14 +854,14 @@
   },
   "explore": {
     "hero": {
-      "title": "Regional DAO Protocol",
-      "subtitle1": "Put your local community on turbo"
+      "title": "Together, build the decentralised AI that will reshape your profession",
+      "subtitle1": "Join an existing project or create a new one to get started"
     },
     "explorer": {
       "title": "Explore DAOs",
-      "myDaos": "My DAOs",
+      "myDaos": "My Bots",
       "popular": "Popular",
-      "newest": "Newest",
+      "newest": "Portfolio",
       "walletBased": "Wallet-based",
       "showMore": "Show more",
       "tokenBased": "Token-based"
@@ -909,18 +909,18 @@
   },
   "cta": {
     "create": {
-      "title": "Create your DAO",
+      "title": "Create an AI bot for your profession",
       "description": "Mint tokens, set governance parameters, and deploy your DAO on-chain in minutes with our no-code setup process.",
       "actionLabel": "Create a DAO"
     },
     "learn": {
-      "title": "Learn about DAOs",
+      "title": "Learn about our B2B AI Bots",
       "description": "Find inspiration and learn about DAOs in our education portal designed for builders at every stage of the journey.",
       "actionLabel": "Learn about DAOs"
     },
     "build": {
       "title": "Build faster",
-      "description": "Use our governance plugins to build a DAO, dApp, or anything you can imagine on the Aragon OSx protocol.",
+      "description": "Use our plugins to accelerate development and learning of your AI Bot.",
       "actionLabel": "Coming soon"
     },
     "404": {
