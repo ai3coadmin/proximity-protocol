@@ -12,9 +12,10 @@ import {VetoMultisigClient} from '../custom/sdk-client/veto-multisig';
 export type PluginTypes =
   | 'capitaldaomumbai.plugin.dao.eth'
   | 'veto.plugin.dao.eth'
+  | 'veto-token.plugin.dao.eth'
   | 'veto-v2.plugin.dao.eth'
   | 'token-voting.plugin.dao.eth'
-  | 'veto-multisig-v1.plugin.dao.eth'
+  | 'veto-multisig.plugin.dao.eth'
   | 'veto-multisig-v2.plugin.dao.eth'
   | 'multisig.plugin.dao.eth';
 
@@ -22,11 +23,13 @@ type PluginType<T> = T extends 'token-voting.plugin.dao.eth'
   ? TokenVotingClient
   : T extends 'multisig.plugin.dao.eth'
   ? MultisigClient
-  : T extends 'veto-multisig-v1.plugin.dao.eth'
+  : T extends 'veto-multisig.plugin.dao.eth'
   ? VetoMultisigClient
   : T extends 'veto-multisig-v2.plugin.dao.eth'
   ? VetoMultisigClient
   : T extends 'veto.plugin.dao.eth'
+  ? VetoClient
+  : T extends 'veto-token.plugin.dao.eth'
   ? VetoClient
   : T extends 'veto-v2.plugin.dao.eth'
   ? VetoClient
@@ -88,7 +91,7 @@ export const usePluginClient = <T extends PluginTypes = PluginTypes>(
             new MultisigClient(ContextPlugin.fromContext(context))
           );
           break;
-        case 'veto-multisig-v1.plugin.dao.eth':
+        case 'veto-multisig.plugin.dao.eth':
         case 'veto-multisig-v2.plugin.dao.eth':
           setPluginClient(
             new VetoMultisigClient(ContextPlugin.fromContext(context))
@@ -96,6 +99,7 @@ export const usePluginClient = <T extends PluginTypes = PluginTypes>(
           break;
         case 'token-voting.plugin.dao.eth':
         case 'veto.plugin.dao.eth':
+        case 'veto-token.plugin.dao.eth':
         case 'veto-v2.plugin.dao.eth':
         case 'capitaldaomumbai.plugin.dao.eth':
           setPluginClient(new VetoClient(ContextPlugin.fromContext(context)));

@@ -81,6 +81,7 @@ export function useProposals(
     'token-voting.plugin.dao.eth',
     'capitaldaomumbai.plugin.dao.eth',
     'veto.plugin.dao.eth',
+    'veto-token.plugin.dao.eth',
     'veto-v2.plugin.dao.eth',
   ].includes(type || '');
 

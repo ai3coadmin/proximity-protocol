@@ -136,6 +136,7 @@ export const DaoExplorer = () => {
                     'token-voting.plugin.dao.eth',
                     'capitaldaomumbai.plugin.dao.eth',
                     'veto.plugin.dao.eth',
+                    'veto-token.plugin.dao.eth',
                     'veto-v2.plugin.dao.eth',
                   ].includes((dao?.plugins?.[0]?.id as PluginTypes) || '')
                     ? 'token-based'
